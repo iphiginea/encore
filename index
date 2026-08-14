@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encore</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0118">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Encore">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0118;
+    --surface:#1a0f2e;
+    --surface-2:#241640;
+    --text:#f3ecfa;
+    --text-dim:#a894c4;
+    --border:#3a2a5c;
+    --primary:#ff2e88;
+    --accent:#ffb800;
+    --crimson:#ff4757;
+    --teal:#4ecdc4;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;}
+  ::selection{background:var(--accent);color:#0a0118;}
+
+  .display{font-family:'Bebas Neue',sans-serif;letter-spacing:0.02em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  #app{max-width:760px;margin:0 auto;padding:20px 16px 80px;}
+
+  header{display:flex;align-items:center;justify-content:space-between;padding:12px 0 20px;border-bottom:1px solid var(--border);margin-bottom:20px;gap:12px;}
+  header .brand{display:flex;flex-direction:column;gap:2px;min-width:0;}
+  header h1{font-size:32px;margin:0;line-height:1.15;color:var(--text);white-space:nowrap;}
+  header .brand small{color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:0.12em;white-space:nowrap;}
+  .menu-wrap{position:relative;flex:none;}
+  .waffle-btn{background:none;border:1px solid var(--border);width:36px;height:36px;border-radius:50%;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;padding:0;}
+  .waffle-btn:hover{border-color:var(--accent);}
+  .waffle-grid{display:grid;grid-template-columns:repeat(3,3px);grid-template-rows:repeat(3,3px);gap:2px;}
+  .waffle-grid i{width:3px;height:3px;border-radius:1px;background:var(--text-dim);display:block;}
+  .waffle-btn:hover .waffle-grid i{background:var(--accent);}
+  .menu-dropdown{position:absolute;top:44px;right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:2px;min-width:190px;box-shadow:0 12px 32px rgba(0,0,0,0.5);z-index:30;}
+  .menu-dropdown button{display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;cursor:pointer;text-align:left;font-family:'IBM Plex Sans';width:100%;}
+  .menu-dropdown button:hover{background:var(--surface-2);color:var(--accent);}
+  @media (max-width:380px){ header h1{font-size:26px;} }
+
+  .install-nudge{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface-2);border:1px solid var(--accent);border-radius:10px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:var(--text);line-height:1.4;}
+  .install-nudge button{background:none;border:none;color:var(--text-dim);font-size:16px;cursor:pointer;flex:none;padding:0 2px;line-height:1;}
+  .install-nudge button:hover{color:var(--accent);}
+
+  nav{display:flex;gap:8px;margin-bottom:24px;}
+  nav button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);padding:12px;border-radius:var(--radius);cursor:pointer;font-family:'IBM Plex Sans';font-weight:600;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;transition:.15s;}
+  nav button.active{color:var(--text);background:var(--primary);border-color:var(--primary);}
+  nav button:not(.active):hover{border-color:var(--text-dim);color:var(--text);}
+
+  .hidden{display:none !important;}
+
+  #search-panel{display:flex;flex-direction:column;gap:12px;}
+  .search-row{display:flex;gap:8px;}
+  .search-row input{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:var(--radius);font-size:15px;font-family:'IBM Plex Sans';}
+  .search-row input:focus{outline:none;border-color:var(--accent);}
+  .search-row button{background:var(--primary);color:var(--text);border:none;padding:0 18px;border-radius:var(--radius);font-weight:600;cursor:pointer;font-family:'IBM Plex Sans';}
+  .filter-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .filter-row input, .filter-row select{flex:1;min-width:100px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:9px 10px;border-radius:8px;font-size:13px;font-family:'IBM Plex Sans';}
+  .filter-row input:focus, .filter-row select:focus{outline:none;border-color:var(--accent);}
+
+  #search-results{display:flex;flex-direction:column;gap:8px;}
+  .show-result{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;cursor:pointer;transition:.15s;}
+  .show-result:hover{border-color:var(--accent);}
+  .show-result .swatch{width:44px;height:44px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:18px;color:#0a0118;}
+  .show-result .info{flex:1;min-width:0;}
+  .show-result .info .t{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .show-result .info .y{color:var(--text-dim);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .show-result .tag{font-size:10px;color:var(--teal);flex:none;text-transform:uppercase;letter-spacing:0.06em;}
+
+  .empty-note{color:var(--text-dim);font-size:14px;padding:20px 0;line-height:1.5;}
+  .inline-msg{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:14px;color:var(--text-dim);}
+  .inline-msg.warn{border-color:var(--accent);color:var(--accent);}
+
+  #duel-arena{display:flex;flex-direction:column;gap:12px;}
+  .duel-progress{text-align:center;color:var(--text-dim);font-size:12px;text-transform:uppercase;letter-spacing:0.12em;}
+  .duel-stage{display:flex;align-items:flex-start;justify-content:center;gap:0;position:relative;touch-action:none;cursor:grab;will-change:transform;}
+  .duel-stage.dragging{cursor:grabbing;}
+  .duel-card{flex:1;max-width:44%;display:flex;flex-direction:column;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:.2s;text-align:center;}
+  .duel-card:hover{transform:scale(1.02) rotate(var(--tilt));border-color:var(--accent);box-shadow:0 8px 30px rgba(255,184,0,0.18);}
+  .duel-card.swipe-target{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset, 0 8px 30px rgba(255,184,0,0.35);}
+  .duel-card:first-child{--tilt:-1deg;}
+  .duel-card:last-child{--tilt:1deg;}
+  .show-card-visual{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .show-card-visual .show-artist{font-family:'Bebas Neue';font-size:clamp(20px,5vw,28px);color:#fff;line-height:1.1;text-shadow:0 2px 10px rgba(0,0,0,0.4);padding:16px;text-align:center;}
+  .duel-card .meta{padding:10px 8px;width:100%;}
+  .duel-card .meta .t{font-weight:600;font-size:13px;line-height:1.25;}
+  .duel-card .meta .y{color:var(--text-dim);font-size:11px;margin-top:2px;}
+  .duel-card .meta .tour{color:var(--teal);font-size:10px;margin-top:2px;text-transform:uppercase;letter-spacing:0.04em;}
+  .vs-divider{width:44px;flex:none;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;align-self:center;}
+  .vs-divider span{font-family:'Bebas Neue';font-size:22px;color:var(--crimson);text-shadow:0 0 18px rgba(255,71,87,0.65);}
+  .confirmation{background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:24px;text-align:center;}
+  .confirmation .rank-number{font-family:'Bebas Neue';font-size:64px;color:var(--accent);line-height:1;}
+  .confirmation .rank-out-of{color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:0.14em;margin-top:2px;}
+  .confirmation p{color:var(--text-dim);margin:6px 0 18px;}
+  .confirmation button{background:var(--primary);color:var(--text);border:none;padding:10px 20px;border-radius:var(--radius);font-weight:600;cursor:pointer;}
+
+  #rankings-list{display:flex;flex-direction:column;gap:8px;}
+  .rankings-tagline{text-align:center;color:var(--teal);font-size:13px;font-style:italic;margin:0 0 16px;}
+  .rankings-search{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:var(--radius);font-size:14px;font-family:'IBM Plex Sans';margin-bottom:14px;}
+  .rankings-search:focus{outline:none;border-color:var(--accent);}
+  .view-toggle{display:flex;gap:6px;margin-bottom:14px;}
+  .view-toggle button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);padding:8px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s;}
+  .view-toggle button.active{background:var(--accent);color:#0a0118;border-color:var(--accent);}
+  .rank-filter-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .rank-filter-row select{flex:1;min-width:100px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:9px 8px;border-radius:8px;font-size:12px;font-family:'IBM Plex Sans';}
+  .sort-wrap{position:relative;flex:none;}
+  .sort-btn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'IBM Plex Sans';}
+  .sort-btn:hover{border-color:var(--accent);color:var(--accent);}
+  #sort-dropdown{top:42px;min-width:220px;}
+  #sort-dropdown button{justify-content:space-between;}
+  #sort-dropdown button.active{color:var(--accent);}
+  #sort-dropdown button.active::after{content:'✓';margin-left:8px;}
+
+  .rankings-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .rankings-count{color:var(--text-dim);font-size:13px;}
+  .rank-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;position:relative;}
+  .rank-row .rank{font-family:'IBM Plex Mono';font-weight:600;font-size:15px;color:var(--text-dim);width:28px;text-align:center;flex:none;}
+  .rank-row:nth-child(1) .rank{color:var(--accent);}
+  .rank-row:nth-child(2) .rank{color:#cfcfd6;}
+  .rank-row:nth-child(3) .rank{color:#c98a4b;}
+  .rank-row .swatch{width:38px;height:38px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:14px;color:#0a0118;}
+  .rank-row .info{flex:1;min-width:0;}
+  .rank-row .info .t{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rank-row .info .y{color:var(--text-dim);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rank-row .score{font-family:'IBM Plex Mono';font-size:14px;color:var(--accent);flex:none;}
+  .rank-row .remove-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;flex:none;padding:4px;}
+  .rank-row .remove-btn:hover{color:var(--crimson);}
+  .rank-row .rerank-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;flex:none;padding:4px;}
+  .rank-row .rerank-btn:hover{color:var(--accent);}
+  .rank-row .confirm-remove{display:flex;gap:6px;flex:none;}
+  .rank-row .confirm-remove button{font-size:11px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;}
+  .rank-row .confirm-remove button.yes{border-color:var(--crimson);color:var(--crimson);}
+
+  .tier-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px;}
+  .tier-label{width:36px;flex:none;font-family:'Bebas Neue';font-size:24px;text-align:center;border-radius:6px;padding:8px 0;color:#0a0118;}
+  .tier-label.tier-s{background:var(--accent);}
+  .tier-label.tier-a{background:var(--teal);}
+  .tier-label.tier-b{background:#8fa8d6;}
+  .tier-label.tier-c{background:var(--text-dim);}
+  .tier-label.tier-d{background:var(--crimson);color:#fff;}
+  .tier-movies{display:flex;flex-wrap:wrap;gap:6px;flex:1;}
+  .tier-movie{width:44px;height:44px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:12px;color:#0a0118;text-align:center;padding:2px;overflow:hidden;}
+
+  .undo-btn{display:block;margin:10px auto 0;background:none;border:1px solid var(--border);color:var(--text-dim);padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;transition:.15s;}
+  .undo-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .random-duel-status{font-size:12px;color:var(--accent);margin-bottom:10px;}
+  .random-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-40%);background:var(--surface);border:1px solid var(--accent);color:var(--text);padding:14px 20px;border-radius:12px;font-size:13px;text-align:center;opacity:0;transition:opacity .25s, transform .25s;z-index:200;max-width:82vw;box-shadow:0 10px 30px rgba(0,0,0,0.5);pointer-events:none;}
+  .random-toast.show{opacity:1;transform:translate(-50%,-50%);}
+
+  .stats-summary{display:flex;gap:10px;margin-bottom:20px;}
+  .stat-box{flex:1;background:var(--surface-2);border-radius:8px;padding:14px 8px;text-align:center;}
+  .stat-num{font-family:'Bebas Neue';font-size:32px;color:var(--accent);line-height:1;}
+  .stat-label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;}
+  .stats-heading{font-family:'Bebas Neue';font-size:18px;font-weight:400;margin:18px 0 10px;color:var(--text);}
+  .stats-bars{display:flex;flex-direction:column;gap:8px;}
+  .stats-bar-row{display:flex;align-items:center;gap:8px;font-size:12px;}
+  .stats-bar-label{width:100px;flex:none;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .stats-bar-track{flex:1;background:var(--surface-2);border-radius:4px;height:10px;overflow:hidden;}
+  .stats-bar-fill{height:100%;background:var(--primary);border-radius:4px;}
+  .stats-bar-count{width:24px;flex:none;text-align:right;color:var(--text-dim);}
+  .stats-callout{background:var(--surface-2);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:13px;line-height:1.5;}
+  .stats-callout b{color:var(--accent);}
+
+  #settings-modal, #stats-modal, #details-modal{position:fixed;inset:0;background:rgba(6,2,16,0.72);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10;}
+  #settings-modal .box, #stats-modal .box, #details-modal .box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:440px;width:100%;max-height:80vh;overflow-y:auto;}
+  #settings-modal h2, #stats-modal h2, #details-modal h2{margin:0 0 8px;font-family:'Bebas Neue';font-size:26px;font-weight:400;}
+  #settings-modal p, #details-modal p{color:var(--text-dim);font-size:13px;line-height:1.5;margin-bottom:14px;}
+  #settings-modal a, #details-modal a{color:var(--accent);}
+  #settings-modal input, #details-modal input{width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'IBM Plex Mono';font-size:13px;margin-bottom:14px;}
+  #settings-modal .row, #stats-modal .row, #details-modal .row{display:flex;gap:8px;justify-content:flex-end;}
+  #settings-modal button, #stats-modal button, #details-modal button{padding:9px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-weight:600;font-size:13px;}
+  #settings-modal button.save, #stats-modal button.save, #details-modal button.save{background:var(--primary);border-color:var(--primary);color:var(--text);}
+  #settings-modal button.cancel:hover, #stats-modal button.cancel:hover, #details-modal button.cancel:hover{border-color:var(--text-dim);}
+  .settings-section{border-top:1px solid var(--border);margin-top:18px;padding-top:18px;}
+  .settings-section h3{font-family:'Bebas Neue';font-size:20px;font-weight:400;margin:0 0 6px;}
+  .settings-section p{color:var(--text-dim);font-size:13px;line-height:1.5;margin-bottom:12px;}
+  .file-btn{display:inline-block;padding:9px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-weight:600;font-size:13px;}
+  .file-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .file-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .status-note{font-size:12px;color:var(--text-dim);margin-top:10px;line-height:1.5;}
+  .companion-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+  .companion-chip{background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);padding:7px 12px;border-radius:999px;font-size:12px;cursor:pointer;font-family:'IBM Plex Sans';}
+  .companion-chip:hover{border-color:var(--accent);}
+  .companion-chip.selected{background:var(--primary);border-color:var(--primary);color:var(--text);}
+  .seating-toggle{display:flex;gap:8px;}
+  .seating-toggle button{flex:1;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);padding:10px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;font-family:'IBM Plex Sans';}
+  .seating-toggle button.active{background:var(--teal);border-color:var(--teal);color:#0a0118;}
+
+  .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">
+      <h1 class="display">Encore</h1>
+      <small>Every show, ranked.</small>
+    </div>
+    <div class="menu-wrap">
+      <button id="menu-btn" class="waffle-btn" title="Menu">
+        <span class="waffle-grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      </button>
+      <div id="menu-dropdown" class="menu-dropdown hidden">
+        <button id="stats-btn">📊 <span>Stats</span></button>
+        <button id="random-duel-btn">🎲 <span>Random Duel</span></button>
+        <button id="export-csv-btn">⬇️ <span>Export CSV</span></button>
+        <button id="settings-btn">⚙ <span>Settings</span></button>
+      </div>
+    </div>
+  </header>
+
+  <div id="install-nudge" class="install-nudge hidden">
+    <span>📲 Add Encore to your Home Screen — otherwise Safari can quietly clear your data after a week of not opening it. Tap Share, then "Add to Home Screen."</span>
+    <button id="install-nudge-close" title="Dismiss">×</button>
+  </div>
+
+  <div id="random-duel-status" class="random-duel-status hidden"></div>
+
+  <nav>
+    <button id="tab-log" class="active">Log a Show</button>
+    <button id="tab-rankings">Rankings</button>
+  </nav>
+
+  <main>
+    <section id="log-view">
+      <div id="search-panel">
+        <div class="search-row">
+          <input id="artist-input" type="text" placeholder="Artist name…" autocomplete="off">
+          <button id="search-btn">Search</button>
+        </div>
+        <div class="filter-row">
+          <input id="year-input" type="number" inputmode="numeric" placeholder="Year (optional)">
+          <input id="city-input" type="text" placeholder="City (optional)">
+        </div>
+        <div id="search-status"></div>
+        <div id="search-results"></div>
+      </div>
+
+      <div id="duel-arena" class="hidden">
+        <div class="duel-progress mono" id="duel-progress"></div>
+        <div id="duel-stage" class="duel-stage">
+          <div class="duel-card" id="duel-left"></div>
+          <div class="vs-divider"><span>VS</span></div>
+          <div class="duel-card" id="duel-right"></div>
+        </div>
+        <div class="inline-msg" style="text-align:center;">Swipe left or right toward the show you liked more — or just tap it.</div>
+        <button id="undo-duel-btn" class="undo-btn hidden">↺ Undo last pick</button>
+      </div>
+
+      <div id="confirmation-view" class="hidden confirmation">
+        <div class="rank-number mono" id="confirm-rank"></div>
+        <div class="rank-out-of">out of 10</div>
+        <p id="confirm-text"></p>
+        <button id="confirm-add-details" class="file-btn" style="margin-bottom:10px;">Add Details</button>
+        <button id="confirm-done">Log another</button>
+      </div>
+    </section>
+
+    <section id="rankings-view" class="hidden">
+      <p class="rankings-tagline">See who made the cut.</p>
+      <input id="rankings-search" type="text" class="rankings-search" placeholder="Find a show in your rankings…" autocomplete="off">
+      <div class="rank-filter-row">
+        <select id="filter-artist"><option value="">All Artists</option></select>
+        <select id="filter-year"><option value="">All Years</option></select>
+        <div class="sort-wrap">
+          <button id="sort-btn" class="sort-btn" title="Sort">⇅ Sort</button>
+          <div id="sort-dropdown" class="menu-dropdown hidden">
+            <button data-sort="rank_desc">Highest Rank to Lowest</button>
+            <button data-sort="rank_asc">Lowest Rank to Highest</button>
+            <button data-sort="date_desc">Most Recent Show First</button>
+            <button data-sort="date_asc">Oldest Show First</button>
+            <button data-sort="name_asc">Artist A–Z</button>
+            <button data-sort="name_desc">Artist Z–A</button>
+          </div>
+        </div>
+      </div>
+      <div class="view-toggle">
+        <button id="view-list-btn" class="active">List</button>
+        <button id="view-tier-btn">Tiers</button>
+      </div>
+      <div class="rankings-header">
+        <span class="rankings-count mono" id="rankings-count"></span>
+      </div>
+      <div id="rankings-list"></div>
+    </section>
+  </main>
+</div>
+
+<div id="settings-modal" class="hidden">
+  <div class="box">
+    <h2 class="display">setlist.fm API Key</h2>
+    <p>Encore pulls show data from setlist.fm. Sign up for a free account, then apply for a free API key from your account settings at
+      <a href="https://api.setlist.fm/" target="_blank">api.setlist.fm</a>
+      and paste it below.</p>
+    <input id="api-key-input" type="text" placeholder="Paste your setlist.fm API key">
+    <div class="row">
+      <button class="cancel" id="settings-cancel">Cancel</button>
+      <button class="save" id="settings-save">Save</button>
+    </div>
+
+    <div class="settings-section">
+      <h3>Backup &amp; Sync</h3>
+      <p>Export your rankings as a file, then import it in another browser or on another device to bring everything over. <strong>Importing replaces</strong> whatever's currently on this device.</p>
+      <p>Encore also <strong>auto-exports a backup</strong> every 25 duels or 2 weeks, whichever comes first. Tip: set Safari's downloads to iCloud Drive (Settings → Safari → Downloads → iCloud Drive) so these land somewhere that syncs automatically.</p>
+      <div class="file-row">
+        <button class="file-btn" id="export-backup-btn">Export Backup</button>
+        <label class="file-btn" for="import-backup-input">Import Backup</label>
+        <input type="file" id="import-backup-input" accept="application/json" style="display:none;">
+      </div>
+      <div class="status-note" id="backup-status"></div>
+    </div>
+  </div>
+</div>
+
+<div id="stats-modal" class="hidden">
+  <div class="box">
+    <h2 class="display">Your Stats</h2>
+    <div id="stats-content"></div>
+    <div class="row">
+      <button class="cancel" id="stats-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="details-modal" class="hidden">
+  <div class="box">
+    <h2 class="display" id="details-title">Show Details</h2>
+
+    <div class="settings-section" style="border-top:none;margin-top:0;padding-top:0;">
+      <h3>Who You Went With</h3>
+      <div id="companion-chips" class="companion-chips"></div>
+      <div class="search-row">
+        <input id="new-companion-input" type="text" placeholder="Add a person…">
+        <button id="add-companion-btn">Add</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Seated or Standing?</h3>
+      <div class="seating-toggle">
+        <button data-seating="seated" id="seat-seated-btn">Seated</button>
+        <button data-seating="standing" id="seat-standing-btn">Standing</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Who Paid</h3>
+      <input id="paid-by-input" type="text" placeholder="e.g. Me, Sarah, Split">
+    </div>
+
+    <div class="row">
+      <button class="save" id="details-close">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = {
+  apiKey: null,
+  library: [],
+  view: 'log',
+  pendingShow: null,
+  duelQueue: [],
+  duelIndex: 0,
+  isRerank: false,
+  isRandomDuel: false,
+  lastPendingWon: null,
+  duelHistory: [],
+  rankingsViewMode: 'list',
+  rankingsQuery: '',
+  filterArtist: '',
+  filterYear: '',
+  sortMode: 'rank_desc',
+  totalDuels: 0,
+  randomLoopActive: false,
+  randomLoopTimeout: null,
+  genreCache: {},
+  artistImageCache: {},
+  companions: [],
+  lastBackupAt: 0,
+  duelsSinceBackup: 0
+};
+
+const el = id => document.getElementById(id);
+
+async function storageGet(key){
+  try{ return localStorage.getItem(key); }catch(e){ return null; }
+}
+async function storageSet(key, value){
+  try{ localStorage.setItem(key, value); }catch(e){ console.error('storage set failed', e); }
+}
+
+async function init(){
+  const key = await storageGet('encore:api-key');
+  if(key) state.apiKey = key;
+  const lib = await storageGet('encore:library');
+  if(lib){ try{ state.library = JSON.parse(lib); }catch(e){ state.library = []; } }
+  const duels = await storageGet('encore:totalduels');
+  if(duels){ const n = parseInt(duels, 10); state.totalDuels = isNaN(n) ? 0 : n; }
+  const genreCacheRaw = await storageGet('encore:genrecache');
+  if(genreCacheRaw){ try{ state.genreCache = JSON.parse(genreCacheRaw); }catch(e){ state.genreCache = {}; } }
+  const artistImageCacheRaw = await storageGet('encore:artistimagecache');
+  if(artistImageCacheRaw){ try{ state.artistImageCache = JSON.parse(artistImageCacheRaw); }catch(e){ state.artistImageCache = {}; } }
+  const companionsRaw = await storageGet('encore:companions');
+  if(companionsRaw){ try{ state.companions = JSON.parse(companionsRaw); }catch(e){ state.companions = []; } }
+  const lastBackupRaw = await storageGet('encore:lastbackup');
+  if(lastBackupRaw){ const n = parseInt(lastBackupRaw, 10); state.lastBackupAt = isNaN(n) ? 0 : n; }
+  const sinceBackupRaw = await storageGet('encore:duelssincebackup');
+  if(sinceBackupRaw){ const n = parseInt(sinceBackupRaw, 10); state.duelsSinceBackup = isNaN(n) ? 0 : n; }
+  bindEvents();
+  renderView();
+  maybeShowInstallNudge();
+}
+
+function isStandalone(){
+  return window.navigator.standalone === true ||
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+}
+async function maybeShowInstallNudge(){
+  if(isStandalone()) return;
+  const dismissed = await storageGet('encore:installnudgedismissed');
+  if(dismissed) return;
+  el('install-nudge').classList.remove('hidden');
+}
+
+function bindEvents(){
+  el('tab-log').onclick = () => { stopRandomLoop(); state.view='log'; renderView(); };
+  el('tab-rankings').onclick = () => { stopRandomLoop(); state.view='rankings'; renderView(); };
+  el('settings-btn').onclick = openSettings;
+  el('menu-btn').onclick = (e) => { e.stopPropagation(); el('menu-dropdown').classList.toggle('hidden'); };
+  el('menu-dropdown').addEventListener('click', (e) => {
+    if(e.target.closest('button')) el('menu-dropdown').classList.add('hidden');
+  });
+  el('sort-btn').onclick = (e) => { e.stopPropagation(); el('sort-dropdown').classList.toggle('hidden'); };
+  el('sort-dropdown').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-sort]');
+    if(btn){
+      state.sortMode = btn.dataset.sort;
+      updateSortDropdown();
+      renderRankingsList();
+      el('sort-dropdown').classList.add('hidden');
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if(!el('menu-dropdown').contains(e.target) && e.target !== el('menu-btn')){
+      el('menu-dropdown').classList.add('hidden');
+    }
+    if(!el('sort-dropdown').contains(e.target) && e.target !== el('sort-btn')){
+      el('sort-dropdown').classList.add('hidden');
+    }
+  });
+  el('install-nudge-close').onclick = async () => {
+    el('install-nudge').classList.add('hidden');
+    await storageSet('encore:installnudgedismissed', '1');
+  };
+  el('settings-cancel').onclick = closeSettings;
+  el('settings-save').onclick = saveApiKey;
+  el('search-btn').onclick = runSearch;
+  el('artist-input').addEventListener('keydown', e => { if(e.key==='Enter') runSearch(); });
+  el('confirm-done').onclick = resetToSearch;
+  el('export-csv-btn').onclick = exportCSV;
+  el('export-backup-btn').onclick = exportBackup;
+  el('import-backup-input').addEventListener('change', handleImportBackupFile);
+  el('rankings-search').addEventListener('input', () => {
+    state.rankingsQuery = el('rankings-search').value;
+    renderRankingsList();
+  });
+  el('view-list-btn').onclick = () => { state.rankingsViewMode = 'list'; updateViewToggle(); renderRankingsList(); };
+  el('view-tier-btn').onclick = () => { state.rankingsViewMode = 'tiers'; updateViewToggle(); renderRankingsList(); };
+  el('random-duel-btn').onclick = () => {
+    stopRandomLoop();
+    state.randomLoopActive = true;
+    startRandomDuel();
+  };
+  el('undo-duel-btn').onclick = undoLastDuel;
+  el('filter-artist').addEventListener('change', () => { state.filterArtist = el('filter-artist').value; renderRankingsList(); });
+  el('filter-year').addEventListener('change', () => { state.filterYear = el('filter-year').value; renderRankingsList(); });
+  el('stats-btn').onclick = () => { el('stats-content').innerHTML = buildStats(); el('stats-modal').classList.remove('hidden'); };
+  el('stats-close').onclick = () => el('stats-modal').classList.add('hidden');
+  el('confirm-add-details').onclick = () => { if(state.pendingShow) openDetailsModal(state.pendingShow); };
+  el('details-close').onclick = closeDetailsModal;
+  el('add-companion-btn').onclick = () => {
+    const name = el('new-companion-input').value.trim();
+    if(!name || !currentDetailsShow) return;
+    if(!state.companions.includes(name)){
+      state.companions.push(name);
+      storageSet('encore:companions', JSON.stringify(state.companions));
+    }
+    currentDetailsShow.companions = currentDetailsShow.companions || [];
+    if(!currentDetailsShow.companions.includes(name)) currentDetailsShow.companions.push(name);
+    persistShowUpdate();
+    el('new-companion-input').value = '';
+    renderCompanionChips(currentDetailsShow);
+  };
+  el('new-companion-input').addEventListener('keydown', e => { if(e.key==='Enter') el('add-companion-btn').click(); });
+  el('seat-seated-btn').onclick = () => {
+    if(!currentDetailsShow) return;
+    currentDetailsShow.seating = currentDetailsShow.seating === 'seated' ? null : 'seated';
+    persistShowUpdate();
+    renderSeatingButtons(currentDetailsShow);
+  };
+  el('seat-standing-btn').onclick = () => {
+    if(!currentDetailsShow) return;
+    currentDetailsShow.seating = currentDetailsShow.seating === 'standing' ? null : 'standing';
+    persistShowUpdate();
+    renderSeatingButtons(currentDetailsShow);
+  };
+  el('paid-by-input').addEventListener('change', () => {
+    if(!currentDetailsShow) return;
+    currentDetailsShow.paidBy = el('paid-by-input').value.trim();
+    persistShowUpdate();
+  });
+  initDuelSwipe();
+}
+
+function renderView(){
+  el('tab-log').classList.toggle('active', state.view==='log');
+  el('tab-rankings').classList.toggle('active', state.view==='rankings');
+  el('log-view').classList.toggle('hidden', state.view!=='log');
+  el('rankings-view').classList.toggle('hidden', state.view!=='rankings');
+  if(state.view==='rankings') renderRankings();
+}
+
+function openSettings(){
+  el('api-key-input').value = state.apiKey || '';
+  el('settings-modal').classList.remove('hidden');
+}
+function closeSettings(){ el('settings-modal').classList.add('hidden'); }
+async function saveApiKey(){
+  const val = el('api-key-input').value.trim();
+  state.apiKey = val || null;
+  await storageSet('encore:api-key', val);
+  closeSettings();
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// --- Artist images via TheAudioDB (shared free test key, no signup needed) ---
+async function fetchArtistImage(artistName){
+  const key = normalizeTitle(artistName);
+  if(state.artistImageCache[key] !== undefined) return state.artistImageCache[key];
+  try{
+    const res = await fetch(`https://www.theaudiodb.com/api/v1/json/123/search.php?s=${encodeURIComponent(artistName)}`);
+    if(!res.ok){ return null; }
+    const data = await res.json();
+    const artist = data.artists && data.artists[0];
+    const image = artist ? (artist.strArtistThumb || artist.strArtistFanart || artist.strArtistBanner || null) : null;
+    state.artistImageCache[key] = image;
+    storageSet('encore:artistimagecache', JSON.stringify(state.artistImageCache));
+    return image;
+  }catch(e){ return null; }
+}
+
+function hashHue(str){
+  let hash = 0;
+  for(let i=0;i<str.length;i++){ hash = (str.charCodeAt(i)) + ((hash<<5)-hash); }
+  return Math.abs(hash) % 360;
+}
+function artistGradient(name){
+  const hue = hashHue(name || '?');
+  return `linear-gradient(135deg, hsl(${hue},70%,26%), hsl(${(hue+40)%360},65%,14%))`;
+}
+function artistSwatchStyle(name){
+  return `background:${artistGradient(name)};`;
+}
+
+function formatDateDisplay(d){
+  if(!d) return '';
+  const parts = d.split('-');
+  if(parts.length !== 3) return d;
+  const [dd,mm,yyyy] = parts;
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const mi = parseInt(mm,10)-1;
+  return `${months[mi]||mm} ${parseInt(dd,10)}, ${yyyy}`;
+}
+function dateSortValue(d){
+  if(!d) return 0;
+  const parts = d.split('-');
+  if(parts.length !== 3) return 0;
+  const [dd,mm,yyyy] = parts;
+  return parseInt(`${yyyy}${mm}${dd}`,10) || 0;
+}
+
+async function runSearch(){
+  const artistName = el('artist-input').value.trim();
+  const year = el('year-input').value.trim();
+  const city = el('city-input').value.trim();
+  el('search-results').innerHTML = '';
+  if(!artistName){ el('search-status').innerHTML=''; return; }
+  if(!state.apiKey){
+    el('search-status').innerHTML = `<div class="inline-msg warn">Add your setlist.fm API key first — tap the ⚙ up top.</div>`;
+    return;
+  }
+  el('search-status').innerHTML = `<span class="spinner"></span>`;
+  try{
+    let url = `https://api.setlist.fm/rest/1.0/search/setlists?artistName=${encodeURIComponent(artistName)}`;
+    if(year) url += `&year=${encodeURIComponent(year)}`;
+    if(city) url += `&cityName=${encodeURIComponent(city)}`;
+    const res = await fetch(url, { headers: { 'x-api-key': state.apiKey, 'Accept': 'application/json' } });
+    if(!res.ok){
+      if(res.status === 404){
+        el('search-status').innerHTML = '';
+        renderSearchResults([]);
+        return;
+      }
+      el('search-status').innerHTML = `<div class="inline-msg warn">setlist.fm rejected that request. Check your API key in settings.</div>`;
+      return;
+    }
+    const data = await res.json();
+    el('search-status').innerHTML = '';
+    renderSearchResults(data.setlist || []);
+  }catch(e){
+    el('search-status').innerHTML = `<div class="inline-msg warn">Couldn't reach setlist.fm. Try again.</div>`;
+  }
+}
+
+function parseSetlistResult(raw){
+  return {
+    id: raw.id,
+    artistName: raw.artist ? raw.artist.name : 'Unknown Artist',
+    artistMbid: raw.artist ? raw.artist.mbid : null,
+    date: raw.eventDate || '',
+    year: (raw.eventDate||'').split('-')[2] || '',
+    venue: raw.venue ? raw.venue.name : 'Unknown Venue',
+    city: raw.venue && raw.venue.city ? raw.venue.city.name : '',
+    tour: raw.tour ? raw.tour.name : ''
+  };
+}
+
+function renderSearchResults(rawResults){
+  const container = el('search-results');
+  container.innerHTML = '';
+  if(rawResults.length===0){
+    container.innerHTML = `<div class="empty-note">No shows found. Try adjusting the artist name, year, or city.</div>`;
+    return;
+  }
+  rawResults.slice(0,20).forEach(raw => {
+    const show = parseSetlistResult(raw);
+    const already = state.library.find(m => m.id===show.id);
+    const card = document.createElement('div');
+    card.className = 'show-result';
+    card.innerHTML = `
+      <div class="swatch" style="${artistSwatchStyle(show.artistName)}">${escapeHtml((show.artistName||'?').slice(0,2).toUpperCase())}</div>
+      <div class="info">
+        <div class="t">${escapeHtml(show.artistName)}</div>
+        <div class="y">${escapeHtml(show.venue)}, ${escapeHtml(show.city)} · ${formatDateDisplay(show.date)}</div>
+      </div>
+      ${already ? '<span class="tag">Logged</span>' : ''}
+    `;
+    card.onclick = () => selectShow(show, already);
+    container.appendChild(card);
+  });
+}
+
+async function fetchArtistGenres(mbid){
+  if(!mbid) return [];
+  if(state.genreCache[mbid]) return state.genreCache[mbid];
+  try{
+    const res = await fetch(`https://musicbrainz.org/ws/2/artist/${mbid}?fmt=json&inc=genres`);
+    if(!res.ok) return [];
+    const data = await res.json();
+    const genres = (data.genres || []).sort((a,b)=>(b.count||0)-(a.count||0)).slice(0,2).map(g=>g.name);
+    state.genreCache[mbid] = genres;
+    storageSet('encore:genrecache', JSON.stringify(state.genreCache));
+    return genres;
+  }catch(e){ return []; }
+}
+
+async function selectShow(show, already){
+  stopRandomLoop();
+  if(already){
+    state.view = 'rankings';
+    renderView();
+    return;
+  }
+  el('search-panel').classList.add('hidden');
+  el('confirmation-view').classList.add('hidden');
+  el('duel-arena').classList.add('hidden');
+  el('search-status').innerHTML = `<span class="spinner"></span> Loading details…`;
+
+  const [genres, artistImage] = await Promise.all([
+    fetchArtistGenres(show.artistMbid),
+    fetchArtistImage(show.artistName)
+  ]);
+  el('search-status').innerHTML = '';
+
+  state.pendingShow = {
+    ...show,
+    genres,
+    artistImage,
+    companions: [],
+    seating: null,
+    paidBy: '',
+    elo: 1500,
+    rerankCount: 0,
+    addedAt: Date.now()
+  };
+  const opponents = pickOpponents(state.library, 5);
+  state.duelQueue = opponents;
+  state.duelIndex = 0;
+  state.isRerank = false;
+  state.isRandomDuel = false;
+  state.duelHistory = [];
+
+  if(opponents.length===0){
+    finalizeShow();
+    return;
+  }
+  el('duel-arena').classList.remove('hidden');
+  renderDuel();
+}
+
+function pickOpponents(library, max){
+  if(library.length<=max) return library.slice();
+  const pool = [...library];
+  const chosen = [];
+  while(chosen.length < max && pool.length > 0){
+    const idx = Math.floor(Math.random()*pool.length);
+    chosen.push(pool.splice(idx,1)[0]);
+  }
+  return chosen;
+}
+
+function duelCardHtml(show){
+  const visual = show.artistImage
+    ? `<img src="${show.artistImage}" alt="${escapeHtml(show.artistName)}" style="width:100%;height:100%;object-fit:cover;">`
+    : `<div class="show-artist">${escapeHtml(show.artistName)}</div>`;
+  return `
+    <div class="show-card-visual" style="${show.artistImage ? '' : artistSwatchStyle(show.artistName)}">${visual}</div>
+    <div class="meta">
+      <div class="t">${escapeHtml(show.venue)}</div>
+      <div class="y">${escapeHtml(show.city)} · ${formatDateDisplay(show.date)}</div>
+      ${show.tour ? `<div class="tour">${escapeHtml(show.tour)}</div>` : ''}
+    </div>
+  `;
+}
+
+function renderDuel(){
+  const opponent = state.duelQueue[state.duelIndex];
+  el('duel-progress').textContent = `Duel ${state.duelIndex+1} of ${state.duelQueue.length}`;
+  el('duel-left').innerHTML = duelCardHtml(state.pendingShow);
+  el('duel-right').innerHTML = duelCardHtml(opponent);
+  el('duel-left').onclick = () => handleDuelChoice(true);
+  el('duel-right').onclick = () => handleDuelChoice(false);
+  updateUndoVisibility();
+}
+
+function updateUndoVisibility(){
+  el('undo-duel-btn').classList.toggle('hidden', state.duelHistory.length === 0);
+}
+
+let dragState = null;
+let mouseDragActive = false;
+
+function getEventX(e){
+  if(e.touches && e.touches.length) return e.touches[0].clientX;
+  if(e.changedTouches && e.changedTouches.length) return e.changedTouches[0].clientX;
+  return e.clientX;
+}
+
+function initDuelSwipe(){
+  const stage = el('duel-stage');
+  stage.addEventListener('touchstart', onDuelDragStart, {passive:true});
+  stage.addEventListener('touchmove', onDuelDragMove, {passive:false});
+  stage.addEventListener('touchend', onDuelDragEnd);
+  stage.addEventListener('touchcancel', onDuelDragCancel);
+  stage.addEventListener('mousedown', onDuelDragStart);
+}
+function onDuelDragStart(e){
+  dragState = { startX: getEventX(e), dx: 0 };
+  const stage = el('duel-stage');
+  stage.classList.add('dragging');
+  stage.style.transition = '';
+  if(e.type === 'mousedown'){
+    mouseDragActive = true;
+    document.addEventListener('mousemove', onDuelDragMove);
+    document.addEventListener('mouseup', onDuelDragEnd);
+  }
+}
+function onDuelDragMove(e){
+  if(!dragState) return;
+  if(e.type === 'touchmove') e.preventDefault();
+  dragState.dx = getEventX(e) - dragState.startX;
+  const stage = el('duel-stage');
+  const clamped = Math.max(-160, Math.min(160, dragState.dx));
+  stage.style.transform = `translateX(${clamped}px) rotate(${clamped/28}deg)`;
+  el('duel-left').classList.toggle('swipe-target', dragState.dx < -40);
+  el('duel-right').classList.toggle('swipe-target', dragState.dx > 40);
+}
+function onDuelDragEnd(e){
+  if(!dragState) return;
+  const dx = dragState.dx;
+  const stage = el('duel-stage');
+  stage.classList.remove('dragging');
+  const threshold = Math.min(110, stage.offsetWidth * 0.22);
+  dragState = null;
+  if(mouseDragActive){
+    document.removeEventListener('mousemove', onDuelDragMove);
+    document.removeEventListener('mouseup', onDuelDragEnd);
+    mouseDragActive = false;
+  }
+  if(Math.abs(dx) > threshold){
+    flingAndChoose(dx > 0);
+  }else{
+    resetDuelDrag();
+  }
+}
+function onDuelDragCancel(){ dragState = null; resetDuelDrag(); }
+function resetDuelDrag(){
+  const stage = el('duel-stage');
+  stage.style.transition = 'transform .25s ease';
+  stage.style.transform = '';
+  el('duel-left').classList.remove('swipe-target');
+  el('duel-right').classList.remove('swipe-target');
+  setTimeout(() => { stage.style.transition = ''; }, 250);
+}
+function flingAndChoose(chooseRight){
+  const stage = el('duel-stage');
+  const dir = chooseRight ? 1 : -1;
+  stage.style.transition = 'transform .22s ease, opacity .22s ease';
+  stage.style.transform = `translateX(${dir*520}px) rotate(${dir*18}deg)`;
+  stage.style.opacity = '0';
+  setTimeout(() => {
+    stage.style.transition = '';
+    stage.style.transform = '';
+    stage.style.opacity = '';
+    el('duel-left').classList.remove('swipe-target');
+    el('duel-right').classList.remove('swipe-target');
+    handleDuelChoice(!chooseRight);
+  }, 200);
+}
+
+function expectedScore(a,b){ return 1/(1+Math.pow(10,(b-a)/400)); }
+function eloToScore(elo){
+  const score = 10/(1+Math.pow(10,-(elo-1500)/300));
+  return score.toFixed(1);
+}
+
+function handleDuelChoice(pendingWon){
+  const K = 48;
+  const opponent = state.duelQueue[state.duelIndex];
+  const eP = expectedScore(state.pendingShow.elo, opponent.elo);
+  const eO = 1-eP;
+  const sP = pendingWon ? 1 : 0;
+  const sO = pendingWon ? 0 : 1;
+
+  state.duelHistory.push({
+    pendingEloBefore: state.pendingShow.elo,
+    opponentId: opponent.id,
+    opponentEloBefore: opponent.elo,
+    duelIndexBefore: state.duelIndex
+  });
+
+  state.pendingShow.elo = state.pendingShow.elo + K*(sP-eP);
+  const libOpponent = state.library.find(m=>m.id===opponent.id);
+  if(libOpponent) libOpponent.elo = libOpponent.elo + K*(sO-eO);
+  state.lastPendingWon = pendingWon;
+  state.totalDuels++;
+  storageSet('encore:totalduels', String(state.totalDuels));
+  maybeAutoBackup();
+
+  state.duelIndex++;
+  if(state.duelIndex >= state.duelQueue.length){
+    finalizeShow();
+  }else{
+    renderDuel();
+  }
+}
+
+function undoLastDuel(){
+  if(state.duelHistory.length === 0) return;
+  const snap = state.duelHistory.pop();
+  state.pendingShow.elo = snap.pendingEloBefore;
+  const libOpponent = state.library.find(m => m.id === snap.opponentId);
+  if(libOpponent) libOpponent.elo = snap.opponentEloBefore;
+  const queueOpponent = state.duelQueue.find(m => m.id === snap.opponentId);
+  if(queueOpponent) queueOpponent.elo = snap.opponentEloBefore;
+  state.duelIndex = snap.duelIndexBefore;
+  state.totalDuels = Math.max(0, state.totalDuels - 1);
+  storageSet('encore:totalduels', String(state.totalDuels));
+  renderDuel();
+}
+
+async function finalizeShow(){
+  state.duelHistory = [];
+
+  if(state.isRandomDuel){
+    await storageSet('encore:library', JSON.stringify(state.library));
+    state.isRandomDuel = false;
+    if(state.randomLoopActive){
+      startRandomDuel();
+    }else{
+      el('duel-arena').classList.add('hidden');
+      el('search-panel').classList.remove('hidden');
+    }
+    return;
+  }
+
+  el('duel-arena').classList.add('hidden');
+
+  if(!state.isRerank){
+    state.library.push(state.pendingShow);
+  }else{
+    state.pendingShow.rerankCount = (state.pendingShow.rerankCount || 0) + 1;
+  }
+  await storageSet('encore:library', JSON.stringify(state.library));
+  const sorted = [...state.library].sort((a,b)=>b.elo-a.elo);
+  const rank = sorted.findIndex(m=>m.id===state.pendingShow.id) + 1;
+  const score = eloToScore(state.pendingShow.elo);
+  const verb = state.isRerank ? 're-ranked' : 'lands';
+  el('confirm-rank').textContent = `${score}`;
+  el('confirm-text').textContent = `${state.pendingShow.artistName} at ${state.pendingShow.venue} ${verb} at #${rank} of ${state.library.length}, with a power score of ${score}/10.`;
+  state.isRerank = false;
+  el('confirmation-view').classList.remove('hidden');
+}
+
+function showRandomToast(text){
+  const toast = document.createElement('div');
+  toast.className = 'random-toast';
+  toast.textContent = text;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 950);
+}
+
+function startRerank(show){
+  stopRandomLoop();
+  state.pendingShow = show;
+  state.isRerank = true;
+  state.isRandomDuel = false;
+  state.duelHistory = [];
+  const pool = state.library.filter(m => m.id !== show.id);
+  state.duelQueue = pickOpponents(pool, 5);
+  state.duelIndex = 0;
+
+  state.view = 'log';
+  renderView();
+  el('search-panel').classList.add('hidden');
+  el('confirmation-view').classList.add('hidden');
+
+  if(state.duelQueue.length === 0){
+    finalizeShow();
+    return;
+  }
+  el('duel-arena').classList.remove('hidden');
+  renderDuel();
+}
+
+function maybeAutoBackup(){
+  state.duelsSinceBackup = (state.duelsSinceBackup || 0) + 1;
+  const twoWeeksMs = 14 * 24 * 60 * 60 * 1000;
+  const dueByCount = state.duelsSinceBackup >= 25;
+  const dueByTime = !state.lastBackupAt || (Date.now() - state.lastBackupAt) >= twoWeeksMs;
+  if(dueByCount || dueByTime){
+    exportBackup();
+    showRandomToast('📦 Auto-backup saved — check your Downloads or iCloud Drive.');
+  }else{
+    storageSet('encore:duelssincebackup', String(state.duelsSinceBackup));
+  }
+}
+
+function stopRandomLoop(){
+  state.randomLoopActive = false;
+  if(state.randomLoopTimeout){
+    clearTimeout(state.randomLoopTimeout);
+    state.randomLoopTimeout = null;
+  }
+}
+
+function startRandomDuel(){
+  if(state.library.length < 2){
+    stopRandomLoop();
+    el('duel-arena').classList.add('hidden');
+    el('search-panel').classList.remove('hidden');
+    const note = el('random-duel-status');
+    note.textContent = 'Log at least 2 shows before you can start a random duel.';
+    note.classList.remove('hidden');
+    setTimeout(() => note.classList.add('hidden'), 3000);
+    return;
+  }
+  const pool = [...state.library];
+  const a = pool.splice(Math.floor(Math.random()*pool.length), 1)[0];
+  const b = pool.splice(Math.floor(Math.random()*pool.length), 1)[0];
+
+  state.pendingShow = a;
+  state.duelQueue = [b];
+  state.duelIndex = 0;
+  state.isRerank = false;
+  state.isRandomDuel = true;
+  state.duelHistory = [];
+
+  state.view = 'log';
+  renderView();
+  el('search-panel').classList.add('hidden');
+  el('confirmation-view').classList.add('hidden');
+  el('duel-arena').classList.remove('hidden');
+  renderDuel();
+}
+
+function resetToSearch(){
+  state.pendingShow = null;
+  state.duelQueue = [];
+  state.duelIndex = 0;
+  state.isRandomDuel = false;
+  state.duelHistory = [];
+  el('confirmation-view').classList.add('hidden');
+  el('search-panel').classList.remove('hidden');
+  el('artist-input').value = '';
+  el('year-input').value = '';
+  el('city-input').value = '';
+  el('search-results').innerHTML = '';
+  el('search-status').innerHTML = '';
+}
+
+function renderRankings(){
+  updateViewToggle();
+  renderRankingsList();
+}
+function updateViewToggle(){
+  el('view-list-btn').classList.toggle('active', state.rankingsViewMode === 'list');
+  el('view-tier-btn').classList.toggle('active', state.rankingsViewMode === 'tiers');
+}
+
+function populateFilterOptions(){
+  const artistSel = el('filter-artist');
+  const yearSel = el('filter-year');
+  const artists = new Set();
+  const years = new Set();
+  state.library.forEach(m => {
+    if(m.artistName) artists.add(m.artistName);
+    if(m.year) years.add(m.year);
+  });
+  const sortedArtists = [...artists].sort();
+  const sortedYears = [...years].sort((a,b) => b - a);
+  artistSel.innerHTML = `<option value="">All Artists</option>` + sortedArtists.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+  yearSel.innerHTML = `<option value="">All Years</option>` + sortedYears.map(y => `<option value="${escapeHtml(y)}">${escapeHtml(y)}</option>`).join('');
+  artistSel.value = state.filterArtist || '';
+  yearSel.value = state.filterYear || '';
+}
+
+function normalizeTitle(s){
+  return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+function updateSortDropdown(){
+  document.querySelectorAll('#sort-dropdown button[data-sort]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.sort === state.sortMode);
+  });
+}
+
+function renderRankingsList(){
+  updateSortDropdown();
+  const container = el('rankings-list');
+  el('rankings-count').textContent = state.library.length ? `${state.library.length} show${state.library.length===1?'':'s'} ranked` : '';
+  if(state.library.length===0){
+    container.innerHTML = `<div class="empty-note">No duels fought yet. Log your first show to start the ranking.</div>`;
+    return;
+  }
+  populateFilterOptions();
+
+  const sorted = [...state.library].sort((a,b)=>b.elo-a.elo);
+  const query = normalizeTitle(state.rankingsQuery || '');
+  let ranked = sorted.map((show, idx) => ({ show, rank: idx+1 }));
+
+  if(query) ranked = ranked.filter(r => normalizeTitle(r.show.artistName).includes(query) || normalizeTitle(r.show.venue).includes(query));
+  if(state.filterArtist) ranked = ranked.filter(r => r.show.artistName === state.filterArtist);
+  if(state.filterYear) ranked = ranked.filter(r => r.show.year === state.filterYear);
+
+  if(state.sortMode === 'rank_asc'){
+    ranked = [...ranked].reverse();
+  }else if(state.sortMode === 'date_desc'){
+    ranked = [...ranked].sort((a,b) => dateSortValue(b.show.date) - dateSortValue(a.show.date));
+  }else if(state.sortMode === 'date_asc'){
+    ranked = [...ranked].sort((a,b) => dateSortValue(a.show.date) - dateSortValue(b.show.date));
+  }else if(state.sortMode === 'name_asc'){
+    ranked = [...ranked].sort((a,b) => a.show.artistName.localeCompare(b.show.artistName));
+  }else if(state.sortMode === 'name_desc'){
+    ranked = [...ranked].sort((a,b) => b.show.artistName.localeCompare(a.show.artistName));
+  }
+
+  const visible = ranked;
+  container.innerHTML = '';
+  if(visible.length === 0){
+    container.innerHTML = `<div class="empty-note">No shows match these filters.</div>`;
+    return;
+  }
+  if(state.rankingsViewMode === 'tiers'){
+    renderTierView(container, visible);
+    return;
+  }
+
+  visible.forEach(({show, rank}) => {
+    const row = document.createElement('div');
+    row.className = 'rank-row';
+    const swatchInner = show.artistImage
+      ? `<img src="${show.artistImage}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`
+      : escapeHtml((show.artistName||'?').slice(0,2).toUpperCase());
+    const indicators = show.companions && show.companions.length ? '👥' : '';
+    row.innerHTML = `
+      <div class="rank mono">${rank}</div>
+      <div class="swatch" style="${show.artistImage ? '' : artistSwatchStyle(show.artistName)}">${swatchInner}</div>
+      <div class="info">
+        <div class="t">${escapeHtml(show.artistName)} ${indicators}</div>
+        <div class="y">${escapeHtml(show.venue)} · ${formatDateDisplay(show.date)}</div>
+      </div>
+      <div class="score mono">${eloToScore(show.elo)}</div>
+      <button class="rerank-btn" title="Re-rank">↻</button>
+      <button class="remove-btn" data-id="${show.id}" title="Remove">×</button>
+    `;
+    row.querySelector('.info').style.cursor = 'pointer';
+    row.querySelector('.info').onclick = () => openDetailsModal(show);
+    row.querySelector('.rerank-btn').onclick = () => startRerank(show);
+    row.querySelector('.remove-btn').onclick = () => askRemove(row, show.id);
+    container.appendChild(row);
+  });
+}
+
+function renderTierView(container, visible){
+  const tiers = [
+    {key:'S', label:'S', min:9, className:'tier-s'},
+    {key:'A', label:'A', min:8, className:'tier-a'},
+    {key:'B', label:'B', min:6.5, className:'tier-b'},
+    {key:'C', label:'C', min:5, className:'tier-c'},
+    {key:'D', label:'D', min:-Infinity, className:'tier-d'}
+  ];
+  const buckets = {S:[], A:[], B:[], C:[], D:[]};
+  visible.forEach(({show, rank}) => {
+    const score = parseFloat(eloToScore(show.elo));
+    const tier = tiers.find(t => score >= t.min);
+    buckets[tier.key].push({show, rank});
+  });
+  container.innerHTML = '';
+  tiers.forEach(t => {
+    const items = buckets[t.key];
+    if(items.length === 0) return;
+    const row = document.createElement('div');
+    row.className = 'tier-row';
+    const showsHtml = items.map(({show, rank}) => {
+      return `<div class="tier-movie" style="${artistSwatchStyle(show.artistName)}" title="${escapeHtml(show.artistName)} — #${rank}, ${eloToScore(show.elo)}/10">${escapeHtml((show.artistName||'?').slice(0,2).toUpperCase())}</div>`;
+    }).join('');
+    row.innerHTML = `<div class="tier-label ${t.className}">${t.label}</div><div class="tier-movies">${showsHtml}</div>`;
+    container.appendChild(row);
+  });
+}
+
+function askRemove(row, id){
+  const btn = row.querySelector('.remove-btn');
+  const wrap = document.createElement('div');
+  wrap.className = 'confirm-remove';
+  wrap.innerHTML = `<button class="yes">Remove</button><button class="no">Cancel</button>`;
+  btn.replaceWith(wrap);
+  wrap.querySelector('.yes').onclick = async () => {
+    state.library = state.library.filter(m=>m.id!==id);
+    await storageSet('encore:library', JSON.stringify(state.library));
+    renderRankings();
+  };
+  wrap.querySelector('.no').onclick = () => renderRankings();
+}
+
+let currentDetailsShow = null;
+
+function persistShowUpdate(){
+  storageSet('encore:library', JSON.stringify(state.library));
+  if(state.view === 'rankings') renderRankingsList();
+}
+
+function openDetailsModal(show){
+  currentDetailsShow = show;
+  el('details-title').textContent = `${show.artistName} — Details`;
+  renderCompanionChips(show);
+  renderSeatingButtons(show);
+  el('paid-by-input').value = show.paidBy || '';
+  el('details-modal').classList.remove('hidden');
+}
+function closeDetailsModal(){
+  el('details-modal').classList.add('hidden');
+  currentDetailsShow = null;
+}
+
+function renderCompanionChips(show){
+  const wrap = el('companion-chips');
+  wrap.innerHTML = '';
+  const selected = new Set(show.companions || []);
+  if(state.companions.length === 0){
+    wrap.innerHTML = `<span class="status-note" style="margin-top:0;">No one added yet — type a name below.</span>`;
+    return;
+  }
+  state.companions.forEach(name => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'companion-chip' + (selected.has(name) ? ' selected' : '');
+    chip.textContent = name;
+    chip.onclick = () => {
+      show.companions = show.companions || [];
+      const idx = show.companions.indexOf(name);
+      if(idx === -1) show.companions.push(name); else show.companions.splice(idx,1);
+      persistShowUpdate();
+      renderCompanionChips(show);
+    };
+    wrap.appendChild(chip);
+  });
+}
+
+function renderSeatingButtons(show){
+  el('seat-seated-btn').classList.toggle('active', show.seating === 'seated');
+  el('seat-standing-btn').classList.toggle('active', show.seating === 'standing');
+}
+
+function csvEscape(value){
+  const s = String(value);
+  if(/[",\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+  return s;
+}
+function exportCSV(){
+  if(state.library.length===0) return;
+  const sorted = [...state.library].sort((a,b)=>b.elo-a.elo);
+  const header = ['Rank','Artist','Venue','City','Date','Tour','Score','Elo','Went With','Seating','Paid By','Setlist ID'];
+  const rows = sorted.map((m,idx) => [idx+1, m.artistName, m.venue, m.city, m.date, m.tour||'', eloToScore(m.elo), Math.round(m.elo), (m.companions||[]).join('; '), m.seating||'', m.paidBy||'', m.id]);
+  const csv = [header, ...rows].map(row => row.map(csvEscape).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'encore-rankings.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function exportBackup(){
+  const payload = {
+    app: 'encore',
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    library: state.library,
+    genreCache: state.genreCache,
+    artistImageCache: state.artistImageCache,
+    companions: state.companions
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'encore-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  el('backup-status').textContent = `Exported ${state.library.length} shows.`;
+  state.duelsSinceBackup = 0;
+  state.lastBackupAt = Date.now();
+  storageSet('encore:duelssincebackup', '0');
+  storageSet('encore:lastbackup', String(state.lastBackupAt));
+}
+
+function handleImportBackupFile(e){
+  const file = e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try{
+      const data = JSON.parse(reader.result);
+      if(!Array.isArray(data.library)) throw new Error('bad format');
+      state.library = data.library;
+      if(data.genreCache) state.genreCache = data.genreCache;
+      if(data.artistImageCache) state.artistImageCache = data.artistImageCache;
+      if(Array.isArray(data.companions)) state.companions = data.companions;
+      await storageSet('encore:library', JSON.stringify(state.library));
+      if(data.genreCache) await storageSet('encore:genrecache', JSON.stringify(state.genreCache));
+      if(data.artistImageCache) await storageSet('encore:artistimagecache', JSON.stringify(state.artistImageCache));
+      if(Array.isArray(data.companions)) await storageSet('encore:companions', JSON.stringify(state.companions));
+      el('backup-status').textContent = `Imported ${state.library.length} shows. This replaced your previous library on this device.`;
+      if(state.view === 'rankings') renderRankings();
+    }catch(err){
+      el('backup-status').textContent = `Couldn't read that file — make sure it's an Encore backup (.json).`;
+    }
+  };
+  reader.readAsText(file);
+}
+
+function buildStats(){
+  const lib = state.library;
+  if(lib.length === 0){
+    return `<p class="empty-note">No shows logged yet — stats will show up once you start ranking.</p>`;
+  }
+  const avg = lib.reduce((s,m) => s + parseFloat(eloToScore(m.elo)), 0) / lib.length;
+
+  const artistCounts = {};
+  lib.forEach(m => { artistCounts[m.artistName] = (artistCounts[m.artistName]||0)+1; });
+  const artistEntries = Object.entries(artistCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const maxArtistCount = artistEntries.length ? artistEntries[0][1] : 1;
+
+  const genreCounts = {};
+  lib.forEach(m => (m.genres||[]).forEach(g => { genreCounts[g] = (genreCounts[g]||0)+1; }));
+  const genreEntries = Object.entries(genreCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const maxGenreCount = genreEntries.length ? genreEntries[0][1] : 1;
+
+  const yearCounts = {};
+  lib.forEach(m => { if(m.year) yearCounts[m.year] = (yearCounts[m.year]||0)+1; });
+  const yearEntries = Object.entries(yearCounts).sort((a,b)=>Number(a[0])-Number(b[0]));
+  const maxYearCount = yearEntries.length ? Math.max(...yearEntries.map(e=>e[1])) : 1;
+
+  const venueCounts = {};
+  lib.forEach(m => {
+    const key = m.venue + (m.city ? ', ' + m.city : '');
+    venueCounts[key] = (venueCounts[key]||0) + 1;
+  });
+  const venueEntries = Object.entries(venueCounts).sort((a,b)=>b[1]-a[1]);
+  const maxVenueCount = venueEntries.length ? venueEntries[0][1] : 1;
+  const topVenue = venueEntries[0];
+  const bottomVenue = venueEntries[venueEntries.length-1];
+
+  const bar = (label, count, max) => {
+    const pct = Math.round((count/max)*100);
+    return `<div class="stats-bar-row"><div class="stats-bar-label">${escapeHtml(String(label))}</div><div class="stats-bar-track"><div class="stats-bar-fill" style="width:${pct}%"></div></div><div class="stats-bar-count">${count}</div></div>`;
+  };
+
+  let html = `
+    <div class="stats-summary">
+      <div class="stat-box"><div class="stat-num">${lib.length}</div><div class="stat-label">Shows</div></div>
+      <div class="stat-box"><div class="stat-num">${state.totalDuels}</div><div class="stat-label">Duels Completed</div></div>
+      <div class="stat-box"><div class="stat-num">${avg.toFixed(1)}</div><div class="stat-label">Avg Score</div></div>
+    </div>
+  `;
+
+  if(topVenue && bottomVenue && venueEntries.length > 1){
+    html += `<div class="stats-callout">Most-attended venue: <b>${escapeHtml(topVenue[0])}</b> (${topVenue[1]} times). Least-attended: <b>${escapeHtml(bottomVenue[0])}</b> (${bottomVenue[1]} time${bottomVenue[1]===1?'':'s'}).</div>`;
+  }else if(topVenue){
+    html += `<div class="stats-callout">Most-attended venue: <b>${escapeHtml(topVenue[0])}</b> (${topVenue[1]} times).</div>`;
+  }
+
+  if(artistEntries.length){
+    html += `<h3 class="stats-heading">Times Seen a Band</h3><div class="stats-bars">`;
+    artistEntries.forEach(([name,count]) => { html += bar(name, count, maxArtistCount); });
+    html += `</div>`;
+  }
+
+  if(genreEntries.length){
+    html += `<h3 class="stats-heading">Genres You See Live</h3><div class="stats-bars">`;
+    genreEntries.forEach(([name,count]) => { html += bar(name, count, maxGenreCount); });
+    html += `</div>`;
+  }
+
+  if(yearEntries.length){
+    html += `<h3 class="stats-heading">Shows by Year</h3><div class="stats-bars">`;
+    yearEntries.forEach(([year,count]) => { html += bar(year, count, maxYearCount); });
+    html += `</div>`;
+  }
+
+  if(venueEntries.length){
+    html += `<h3 class="stats-heading">Venues</h3><div class="stats-bars">`;
+    venueEntries.slice(0,10).forEach(([name,count]) => { html += bar(name, count, maxVenueCount); });
+    html += `</div>`;
+  }
+
+  return html;
+}
+
+init();
+</script>
+</body>
+</html>
