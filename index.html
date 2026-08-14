@@ -307,9 +307,21 @@
       <a href="https://api.setlist.fm/" target="_blank">api.setlist.fm</a>
       and paste it below.</p>
     <input id="api-key-input" type="text" placeholder="Paste your setlist.fm API key">
+
+    <p><strong>Also required:</strong> setlist.fm's API blocks direct requests from a browser (a CORS restriction), so search won't work without a small free proxy in front of it. See the setup steps below the export section, then paste your proxy's URL here.</p>
+    <input id="proxy-url-input" type="text" placeholder="e.g. https://your-worker.workers.dev">
+
     <div class="row">
       <button class="cancel" id="settings-cancel">Cancel</button>
       <button class="save" id="settings-save">Save</button>
+    </div>
+
+    <div class="settings-section">
+      <h3>Setting Up the Proxy</h3>
+      <p>1. Go to <a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a> and sign up (free).<br>
+      2. Workers &amp; Pages → Create → Create Worker → give it any name → Deploy.<br>
+      3. Click "Edit code," delete everything, paste in the proxy script (ask me for it again if you need it), then Save and Deploy.<br>
+      4. Copy the worker's URL from the top of the page (looks like <code>https://your-worker.workers.dev</code>) and paste it above.</p>
     </div>
 
     <div class="settings-section">
@@ -371,6 +383,7 @@
 <script>
 const state = {
   apiKey: null,
+  proxyUrl: null,
   library: [],
   view: 'log',
   pendingShow: null,
@@ -407,6 +420,8 @@ async function storageSet(key, value){
 async function init(){
   const key = await storageGet('encore:api-key');
   if(key) state.apiKey = key;
+  const proxyUrl = await storageGet('encore:proxyurl');
+  if(proxyUrl) state.proxyUrl = proxyUrl;
   const lib = await storageGet('encore:library');
   if(lib){ try{ state.library = JSON.parse(lib); }catch(e){ state.library = []; } }
   const duels = await storageGet('encore:totalduels');
@@ -537,6 +552,7 @@ function renderView(){
 
 function openSettings(){
   el('api-key-input').value = state.apiKey || '';
+  el('proxy-url-input').value = state.proxyUrl || '';
   el('settings-modal').classList.remove('hidden');
 }
 function closeSettings(){ el('settings-modal').classList.add('hidden'); }
@@ -544,6 +560,9 @@ async function saveApiKey(){
   const val = el('api-key-input').value.trim();
   state.apiKey = val || null;
   await storageSet('encore:api-key', val);
+  const proxyVal = el('proxy-url-input').value.trim().replace(/\/$/, '');
+  state.proxyUrl = proxyVal || null;
+  await storageSet('encore:proxyurl', proxyVal);
   closeSettings();
 }
 
@@ -609,9 +628,13 @@ async function runSearch(){
     el('search-status').innerHTML = `<div class="inline-msg warn">Add your setlist.fm API key first — tap the ⚙ up top.</div>`;
     return;
   }
+  if(!state.proxyUrl){
+    el('search-status').innerHTML = `<div class="inline-msg warn">setlist.fm blocks direct requests from a browser — you need to set up the free proxy first. See Settings for steps.</div>`;
+    return;
+  }
   el('search-status').innerHTML = `<span class="spinner"></span>`;
   try{
-    let url = `https://api.setlist.fm/rest/1.0/search/setlists?artistName=${encodeURIComponent(artistName)}`;
+    let url = `${state.proxyUrl}/rest/1.0/search/setlists?artistName=${encodeURIComponent(artistName)}`;
     if(year) url += `&year=${encodeURIComponent(year)}`;
     if(city) url += `&cityName=${encodeURIComponent(city)}`;
     const res = await fetch(url, { headers: { 'x-api-key': state.apiKey, 'Accept': 'application/json' } });
@@ -628,7 +651,7 @@ async function runSearch(){
     el('search-status').innerHTML = '';
     renderSearchResults(data.setlist || []);
   }catch(e){
-    el('search-status').innerHTML = `<div class="inline-msg warn">Couldn't reach setlist.fm. Try again.</div>`;
+    el('search-status').innerHTML = `<div class="inline-msg warn">Couldn't reach the proxy. Double-check the proxy URL in Settings.</div>`;
   }
 }
 
