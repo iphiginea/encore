@@ -192,16 +192,41 @@
   .stats-callout{background:var(--surface-2);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:13px;line-height:1.5;}
   .stats-callout b{color:var(--accent);}
 
-  #settings-modal, #stats-modal, #manual-modal{position:fixed;inset:0;background:rgba(10,6,18,0.72);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10;}
-  #settings-modal .box, #stats-modal .box, #manual-modal .box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:440px;width:100%;max-height:80vh;overflow-y:auto;}
-  #settings-modal h2, #stats-modal h2, #manual-modal h2{margin:0 0 8px;font-family:'Anton',sans-serif;font-size:26px;font-weight:400;}
+  .insights-box{max-width:520px;}
+  .insights-section{border-top:1px solid var(--border);margin-top:16px;padding-top:16px;}
+  .insights-section:first-child{border-top:none;margin-top:0;padding-top:0;}
+  .insights-section h3{font-family:'Anton',sans-serif;font-size:20px;font-weight:400;margin:0 0 10px;color:var(--accent);}
+  .insight-card{background:var(--surface-2);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+  .insight-card .label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;font-family:'Courier Prime',monospace;}
+  .insight-card .body{font-size:14px;line-height:1.5;color:var(--text);}
+  .insight-card .body b, .insight-card .body strong{color:var(--accent);}
+  .insight-empty{font-size:12px;color:var(--text-dim);font-style:italic;margin-bottom:8px;}
+  .encore-line-hero{background:linear-gradient(135deg, var(--primary), #b3216a);border-radius:14px;padding:20px;text-align:center;margin-bottom:16px;}
+  .encore-line-hero .big{font-family:'Anton',sans-serif;font-size:40px;color:#fff8ec;line-height:1;}
+  .encore-line-hero .sub{font-family:'Courier Prime',monospace;font-size:12px;color:#fff8ec;opacity:0.9;margin-top:6px;text-transform:uppercase;letter-spacing:0.06em;}
+
+  .venue-size-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+  .venue-size-row:last-child{border-bottom:none;}
+  .venue-size-row .vname{flex:1;font-size:13px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .venue-size-row select{background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:6px;font-size:12px;font-family:'IBM Plex Sans';}
+
+  .artist-card-box{background:var(--surface-2);border-radius:12px;padding:16px;margin-top:12px;}
+  .artist-card-title{font-family:'Anton',sans-serif;font-size:22px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+  .artist-card-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);}
+  .artist-card-row:last-child{border-bottom:none;}
+  .artist-card-row .k{color:var(--text-dim);}
+  .artist-card-row .v{font-weight:600;text-align:right;}
+
+  #settings-modal, #stats-modal, #manual-modal, #insights-modal{position:fixed;inset:0;background:rgba(10,6,18,0.72);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10;}
+  #settings-modal .box, #stats-modal .box, #manual-modal .box, #insights-modal .box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:440px;width:100%;max-height:80vh;overflow-y:auto;}
+  #settings-modal h2, #stats-modal h2, #manual-modal h2, #insights-modal h2{margin:0 0 8px;font-family:'Anton',sans-serif;font-size:26px;font-weight:400;}
   #settings-modal p, #manual-modal p{color:var(--text-dim);font-size:13px;line-height:1.5;margin-bottom:14px;}
   #settings-modal a{color:var(--accent);}
   #settings-modal input, #manual-modal input{width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'IBM Plex Mono';font-size:13px;margin-bottom:14px;}
-  #settings-modal .row, #stats-modal .row, #manual-modal .row{display:flex;gap:8px;justify-content:flex-end;}
-  #settings-modal button, #stats-modal button, #manual-modal button{padding:9px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-weight:600;font-size:13px;}
-  #settings-modal button.save, #stats-modal button.save, #manual-modal button.save{background:var(--primary);border-color:var(--primary);color:var(--text);}
-  #settings-modal button.cancel:hover, #stats-modal button.cancel:hover, #manual-modal button.cancel:hover{border-color:var(--text-dim);}
+  #settings-modal .row, #stats-modal .row, #manual-modal .row, #insights-modal .row{display:flex;gap:8px;justify-content:flex-end;}
+  #settings-modal button, #stats-modal button, #manual-modal button, #insights-modal button{padding:9px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-weight:600;font-size:13px;}
+  #settings-modal button.save, #stats-modal button.save, #manual-modal button.save, #insights-modal button.save{background:var(--primary);border-color:var(--primary);color:var(--text);}
+  #settings-modal button.cancel:hover, #stats-modal button.cancel:hover, #manual-modal button.cancel:hover, #insights-modal button.cancel:hover{border-color:var(--text-dim);}
   .settings-section{border-top:1px solid var(--border);margin-top:18px;padding-top:18px;}
   .settings-section h3{font-family:'Anton',sans-serif;font-size:20px;font-weight:400;margin:0 0 6px;}
   .settings-section p{color:var(--text-dim);font-size:13px;line-height:1.5;margin-bottom:12px;}
@@ -227,6 +252,7 @@
       </button>
       <div id="menu-dropdown" class="menu-dropdown hidden">
         <button id="stats-btn">📊 <span>Stats</span></button>
+        <button id="insights-btn">🧠 <span>Insights</span></button>
         <button id="random-duel-btn">🎲 <span>Random Duel</span></button>
         <button id="export-csv-btn">⬇️ <span>Export CSV</span></button>
         <button id="settings-btn">⚙ <span>Settings</span></button>
@@ -348,6 +374,12 @@
       </div>
       <div class="status-note" id="backfill-status"></div>
     </div>
+
+    <div class="settings-section">
+      <h3>Venue Sizes <span style="color:var(--text-dim);font-weight:400;">(optional)</span></h3>
+      <p>No free service provides venue capacity, so tag it yourself, once per venue — it then applies to every show there automatically. Unlocks the room-size Insights below.</p>
+      <div id="venue-size-list"></div>
+    </div>
   </div>
 </div>
 
@@ -357,6 +389,23 @@
     <div id="stats-content"></div>
     <div class="row">
       <button class="cancel" id="stats-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="insights-modal" class="hidden">
+  <div class="box insights-box">
+    <h2 class="display">Insights</h2>
+    <div id="insights-content"></div>
+
+    <div class="settings-section">
+      <h3>Artist Card</h3>
+      <select id="artist-card-select"><option value="">Pick an artist…</option></select>
+      <div id="artist-card-content"></div>
+    </div>
+
+    <div class="row">
+      <button class="cancel" id="insights-close">Close</button>
     </div>
   </div>
 </div>
@@ -401,6 +450,8 @@ const state = {
   randomLoopActive: false,
   randomLoopTimeout: null,
   genreCache: {},
+  duelLog: [],
+  venueSizes: {},
   searchArtist: '',
   searchYear: '',
   searchCity: '',
@@ -431,6 +482,10 @@ async function init(){
   if(duels){ const n = parseInt(duels, 10); state.totalDuels = isNaN(n) ? 0 : n; }
   const genreCacheRaw = await storageGet('encore:genrecache');
   if(genreCacheRaw){ try{ state.genreCache = JSON.parse(genreCacheRaw); }catch(e){ state.genreCache = {}; } }
+  const duelLogRaw = await storageGet('encore:duellog');
+  if(duelLogRaw){ try{ state.duelLog = JSON.parse(duelLogRaw); }catch(e){ state.duelLog = []; } }
+  const venueSizesRaw = await storageGet('encore:venuesizes');
+  if(venueSizesRaw){ try{ state.venueSizes = JSON.parse(venueSizesRaw); }catch(e){ state.venueSizes = {}; } }
   const lastBackupRaw = await storageGet('encore:lastbackup');
   if(lastBackupRaw){ const n = parseInt(lastBackupRaw, 10); state.lastBackupAt = isNaN(n) ? 0 : n; }
   const sinceBackupRaw = await storageGet('encore:duelssincebackup');
@@ -510,6 +565,12 @@ function bindEvents(){
   el('manual-cancel').onclick = closeManualModal;
   el('manual-save').onclick = submitManualShow;
   el('backfill-songs-btn').onclick = backfillSongs;
+  el('insights-btn').onclick = openInsights;
+  el('insights-close').onclick = () => el('insights-modal').classList.add('hidden');
+  el('artist-card-select').addEventListener('change', () => {
+    const name = el('artist-card-select').value;
+    el('artist-card-content').innerHTML = name ? renderArtistCard(name) : '';
+  });
   initDuelSwipe();
 }
 
@@ -524,9 +585,36 @@ function renderView(){
 function openSettings(){
   el('api-key-input').value = state.apiKey || '';
   el('proxy-url-input').value = state.proxyUrl || '';
+  renderVenueSizeList();
   el('settings-modal').classList.remove('hidden');
 }
 function closeSettings(){ el('settings-modal').classList.add('hidden'); }
+
+function renderVenueSizeList(){
+  const wrap = el('venue-size-list');
+  const venues = new Set();
+  state.library.forEach(s => { if(s.venue) venues.add(s.venue); });
+  if(venues.size === 0){
+    wrap.innerHTML = `<p class="status-note" style="margin-top:0;">Log a few shows first — venues will show up here.</p>`;
+    return;
+  }
+  wrap.innerHTML = [...venues].sort().map(v => {
+    const current = state.venueSizes[v] || '';
+    const opts = ['', 'club', 'theater', 'arena', 'stadium'].map(val => {
+      const labels = { '':'Not set', club:'Club (<500)', theater:'Theater (500–2,500)', arena:'Arena (2,500–20,000)', stadium:'Stadium/Festival (20,000+)' };
+      return `<option value="${val}" ${current===val?'selected':''}>${labels[val]}</option>`;
+    }).join('');
+    return `<div class="venue-size-row"><span class="vname">${escapeHtml(v)}</span><select data-venue="${escapeHtml(v)}">${opts}</select></div>`;
+  }).join('');
+  wrap.querySelectorAll('select[data-venue]').forEach(sel => {
+    sel.onchange = async () => {
+      const v = sel.dataset.venue;
+      if(sel.value){ state.venueSizes[v] = sel.value; }
+      else{ delete state.venueSizes[v]; }
+      await storageSet('encore:venuesizes', JSON.stringify(state.venueSizes));
+    };
+  });
+}
 async function saveApiKey(){
   const val = el('api-key-input').value.trim();
   state.apiKey = val || null;
@@ -895,9 +983,27 @@ function handleDuelChoice(pendingWon){
     duelIndexBefore: state.duelIndex
   });
 
+  state.duelLog.push({
+    aId: state.pendingShow.id,
+    aTitle: state.pendingShow.artistName,
+    aEloBefore: state.pendingShow.elo,
+    aGenres: state.pendingShow.genres || [],
+    bId: opponent.id,
+    bTitle: opponent.artistName,
+    bEloBefore: opponent.elo,
+    bGenres: opponent.genres || [],
+    winnerId: pendingWon ? state.pendingShow.id : opponent.id,
+    timestamp: Date.now()
+  });
+  storageSet('encore:duellog', JSON.stringify(state.duelLog));
+
   state.pendingShow.elo = state.pendingShow.elo + K*(sP-eP);
+  state.pendingShow.peakElo = Math.max(state.pendingShow.peakElo || state.pendingShow.elo, state.pendingShow.elo);
   const libOpponent = state.library.find(m=>m.id===opponent.id);
-  if(libOpponent) libOpponent.elo = libOpponent.elo + K*(sO-eO);
+  if(libOpponent){
+    libOpponent.elo = libOpponent.elo + K*(sO-eO);
+    libOpponent.peakElo = Math.max(libOpponent.peakElo || libOpponent.elo, libOpponent.elo);
+  }
   state.lastPendingWon = pendingWon;
   state.totalDuels++;
   storageSet('encore:totalduels', String(state.totalDuels));
@@ -922,6 +1028,8 @@ function undoLastDuel(){
   state.duelIndex = snap.duelIndexBefore;
   state.totalDuels = Math.max(0, state.totalDuels - 1);
   storageSet('encore:totalduels', String(state.totalDuels));
+  state.duelLog.pop();
+  storageSet('encore:duellog', JSON.stringify(state.duelLog));
   renderDuel();
 }
 
@@ -951,6 +1059,11 @@ async function finalizeShow(){
   await storageSet('encore:library', JSON.stringify(state.library));
   const sorted = [...state.library].sort((a,b)=>b.elo-a.elo);
   const rank = sorted.findIndex(m=>m.id===state.pendingShow.id) + 1;
+  if(state.pendingShow.initialElo === undefined){
+    state.pendingShow.initialElo = state.pendingShow.elo;
+    state.pendingShow.initialRank = rank;
+    await storageSet('encore:library', JSON.stringify(state.library));
+  }
   const score = eloToScore(state.pendingShow.elo);
   const verb = state.isRerank ? 're-ranked' : 'lands';
   el('confirm-rank').textContent = `${score}`;
@@ -1281,7 +1394,9 @@ function exportBackup(){
     version: 1,
     exportedAt: new Date().toISOString(),
     library: state.library,
-    genreCache: state.genreCache
+    genreCache: state.genreCache,
+    duelLog: state.duelLog,
+    venueSizes: state.venueSizes
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
@@ -1310,8 +1425,12 @@ function handleImportBackupFile(e){
       if(!Array.isArray(data.library)) throw new Error('bad format');
       state.library = data.library;
       if(data.genreCache) state.genreCache = data.genreCache;
+      if(Array.isArray(data.duelLog)) state.duelLog = data.duelLog;
+      if(data.venueSizes) state.venueSizes = data.venueSizes;
       await storageSet('encore:library', JSON.stringify(state.library));
       if(data.genreCache) await storageSet('encore:genrecache', JSON.stringify(state.genreCache));
+      if(Array.isArray(data.duelLog)) await storageSet('encore:duellog', JSON.stringify(state.duelLog));
+      if(data.venueSizes) await storageSet('encore:venuesizes', JSON.stringify(state.venueSizes));
       el('backup-status').textContent = `Imported ${state.library.length} shows. This replaced your previous library on this device.`;
       if(state.view === 'rankings') renderRankings();
     }catch(err){
@@ -1349,6 +1468,386 @@ async function backfillSongs(){
   }
   await storageSet('encore:library', JSON.stringify(state.library));
   el('backfill-status').textContent = `Done — filled in setlists for ${targets.length} show${targets.length===1?'':'s'}.`;
+}
+
+// ============ INSIGHTS ENGINE ============
+
+function getCurrentRankMap(){
+  const sorted = [...state.library].sort((a,b) => b.elo-a.elo);
+  const map = {};
+  sorted.forEach((m,i) => { map[m.id] = i+1; });
+  return map;
+}
+
+function winLossFor(showId){
+  let wins = 0, losses = 0;
+  state.duelLog.forEach(d => {
+    if(d.aId === showId){ if(d.winnerId === d.aId) wins++; else losses++; }
+    if(d.bId === showId && d.bId !== d.aId){ if(d.winnerId === d.bId) wins++; else losses++; }
+  });
+  return { wins, losses };
+}
+
+function looksLikeFestival(show){
+  const text = `${show.tour||''} ${show.venue||''}`.toLowerCase();
+  return /festival|lollapalooza|coachella|bonnaroo|austin city limits|\backl\b|governors ball|outside lands|riot fest|pitchfork|firefly|electric forest|\bedc\b|osheaga|primavera/.test(text);
+}
+
+// --- Best by category (ranking-weighted averages) ---
+function computeGroupBest(groupByFn, minCount){
+  const groups = {};
+  state.library.forEach(s => {
+    const keys = groupByFn(s) || [];
+    keys.forEach(k => {
+      if(!k) return;
+      if(!groups[k]) groups[k] = [];
+      groups[k].push(parseFloat(eloToScore(s.elo)));
+    });
+  });
+  const entries = Object.entries(groups).filter(([k,arr]) => arr.length >= minCount)
+    .map(([k,arr]) => ({ key:k, avg: arr.reduce((a,b)=>a+b,0)/arr.length, count: arr.length }));
+  if(entries.length === 0) return null;
+  entries.sort((a,b) => b.avg-a.avg);
+  return entries[0];
+}
+
+function computeBestByYear(){
+  const byYear = {};
+  state.library.forEach(s => { if(s.year){ (byYear[s.year] = byYear[s.year]||[]).push(s); } });
+  const results = Object.entries(byYear).map(([year, shows]) => {
+    const best = [...shows].sort((a,b)=>b.elo-a.elo)[0];
+    return { year, best };
+  }).sort((a,b) => b.year - a.year);
+  return results;
+}
+
+// --- Duel-specific ---
+function computeGiantKiller(){
+  const rankMap = getCurrentRankMap();
+  let best = null;
+  state.duelLog.forEach(d => {
+    const loserId = d.winnerId === d.aId ? d.bId : d.aId;
+    const winnerRank = rankMap[d.winnerId], loserRank = rankMap[loserId];
+    if(winnerRank == null || loserRank == null) return;
+    if(loserRank <= 10 && winnerRank > loserRank){
+      const gap = winnerRank - loserRank;
+      if(!best || gap > best.gap){
+        best = {
+          winnerTitle: d.winnerId===d.aId ? d.aTitle : d.bTitle,
+          loserTitle: loserId===d.aId ? d.aTitle : d.bTitle,
+          winnerRank, loserRank
+        };
+      }
+    }
+  });
+  return best;
+}
+
+function computeStreaks(){
+  const perShow = {};
+  const sortedLog = [...state.duelLog].sort((a,b) => a.timestamp-b.timestamp);
+  sortedLog.forEach(d => {
+    if(!perShow[d.aId]) perShow[d.aId] = { title: d.aTitle, results: [] };
+    if(!perShow[d.bId]) perShow[d.bId] = { title: d.bTitle, results: [] };
+    perShow[d.aId].results.push(d.winnerId === d.aId ? 'W' : 'L');
+    perShow[d.bId].results.push(d.winnerId === d.bId ? 'W' : 'L');
+  });
+  let bestWin = null;
+  Object.values(perShow).forEach(data => {
+    let cur=0, max=0;
+    data.results.forEach(r => { if(r==='W'){ cur++; max=Math.max(max,cur); } else { cur=0; } });
+    if(max >= 3 && (!bestWin || max > bestWin.streak)) bestWin = { title: data.title, streak: max };
+  });
+  return bestWin;
+}
+
+function computeUntouchable(minDuels){
+  const rankMap = getCurrentRankMap();
+  let best = null;
+  state.library.forEach(s => {
+    const rec = winLossFor(s.id);
+    const total = rec.wins + rec.losses;
+    if(total < minDuels) return;
+    const winRate = rec.wins/total;
+    if(!best || winRate > best.winRate || (winRate === best.winRate && total > best.total)){
+      best = { title: s.artistName, venue: s.venue, winRate, total, rank: rankMap[s.id] };
+    }
+  });
+  return best;
+}
+
+function computeBiggestFall(){
+  let worst = null;
+  state.library.forEach(s => {
+    if(s.peakElo == null) return;
+    const fall = s.peakElo - s.elo;
+    if(fall > 60 && (!worst || fall > worst.fall)){
+      worst = { title: s.artistName, venue: s.venue, fall: Math.round(fall) };
+    }
+  });
+  return worst;
+}
+
+function computeGatekeeper(){
+  const sorted = [...state.library].sort((a,b) => b.elo-a.elo);
+  if(sorted.length < 8) return null;
+  const upperBound = Math.ceil(sorted.length * 0.5);
+  let best = null;
+  for(let i = 1; i < upperBound; i++){
+    const gap = sorted[i-1].elo - sorted[i].elo;
+    if(!best || gap > best.gap){
+      best = { show: sorted[i-1], rank: i, gap };
+    }
+  }
+  return best;
+}
+
+function computeClimbersAndFallers(){
+  const withInitial = state.library.filter(s => s.initialElo != null);
+  let climber = null, faller = null;
+  const rankMap = getCurrentRankMap();
+  withInitial.forEach(s => {
+    const delta = s.elo - s.initialElo;
+    if(delta > 40 && (!climber || delta > climber.delta)){
+      climber = { title: s.artistName, venue: s.venue, delta: Math.round(delta), initialRank: s.initialRank, currentRank: rankMap[s.id] };
+    }
+    if(delta < -40 && (!faller || delta < faller.delta)){
+      faller = { title: s.artistName, venue: s.venue, delta: Math.round(delta), initialRank: s.initialRank, currentRank: rankMap[s.id] };
+    }
+  });
+  return { climber, faller };
+}
+
+function computeEncoreLine(){
+  const sorted = [...state.library].sort((a,b) => b.elo-a.elo);
+  let count = 0;
+  for(const show of sorted){
+    const rec = winLossFor(show.id);
+    const total = rec.wins + rec.losses;
+    if(total < 2){ count++; continue; }
+    if(rec.wins/total >= 0.5){ count++; }
+    else break;
+  }
+  return { count, total: sorted.length };
+}
+
+// --- Taste insights ---
+function computeRepeatArtistEffect(){
+  const byArtist = {};
+  state.library.forEach(s => { (byArtist[s.artistName] = byArtist[s.artistName]||[]).push(s); });
+  const first = [], second = [];
+  Object.values(byArtist).forEach(shows => {
+    if(shows.length < 2) return;
+    const sorted = [...shows].sort((a,b) => dateSortValue(a.date)-dateSortValue(b.date));
+    first.push(parseFloat(eloToScore(sorted[0].elo)));
+    second.push(parseFloat(eloToScore(sorted[1].elo)));
+  });
+  if(first.length < 3) return null;
+  const avgFirst = first.reduce((a,b)=>a+b,0)/first.length;
+  const avgSecond = second.reduce((a,b)=>a+b,0)/second.length;
+  return { avgFirst, avgSecond, n: first.length, better: avgSecond > avgFirst };
+}
+
+function computeGenreMatchup(){
+  const results = {};
+  state.duelLog.forEach(d => {
+    const ga = (d.aGenres||[])[0], gb = (d.bGenres||[])[0];
+    if(!ga || !gb || ga===gb) return;
+    const pair = [ga,gb].sort();
+    const key = pair.join('|');
+    if(!results[key]) results[key] = { g1: pair[0], g2: pair[1], g1Wins:0, g2Wins:0 };
+    const winnerGenre = d.winnerId===d.aId ? ga : gb;
+    if(winnerGenre === results[key].g1) results[key].g1Wins++; else results[key].g2Wins++;
+  });
+  const entries = Object.values(results).filter(r => (r.g1Wins+r.g2Wins) >= 3);
+  if(entries.length === 0) return null;
+  entries.sort((a,b) => Math.abs(b.g1Wins-b.g2Wins)/(b.g1Wins+b.g2Wins) - Math.abs(a.g1Wins-a.g2Wins)/(a.g1Wins+a.g2Wins));
+  const top = entries[0];
+  const total = top.g1Wins + top.g2Wins;
+  const winner = top.g1Wins >= top.g2Wins ? top.g1 : top.g2;
+  const winnerCount = Math.max(top.g1Wins, top.g2Wins);
+  const loser = winner === top.g1 ? top.g2 : top.g1;
+  return { winner, loser, pct: Math.round((winnerCount/total)*100), total };
+}
+
+function computeGoldenEra(){
+  const topN = Math.min(20, state.library.length);
+  if(topN < 8) return null;
+  const sorted = [...state.library].sort((a,b) => b.elo-a.elo).slice(0, topN);
+  const years = sorted.map(s => parseInt(s.year,10)).filter(y => !isNaN(y));
+  if(years.length < 6) return null;
+  const minY = Math.min(...years), maxY = Math.max(...years);
+  const windowSize = 4;
+  let best = null;
+  for(let start = minY; start <= maxY; start++){
+    const end = start + windowSize - 1;
+    const count = years.filter(y => y >= start && y <= end).length;
+    if(!best || count > best.count) best = { start, end, count };
+  }
+  return { ...best, pct: Math.round((best.count/topN)*100), topN };
+}
+
+function computeVenueSizeInsight(){
+  const sizeLabels = { club:'clubs (under 500 cap.)', theater:'theaters (500–2,500 cap.)', arena:'arenas (2,500–20,000 cap.)', stadium:'stadiums/festival grounds (20,000+ cap.)' };
+  const tagged = state.library.filter(s => state.venueSizes[s.venue]);
+  if(tagged.length < 6) return null;
+  const bySize = {};
+  tagged.forEach(s => {
+    const sz = state.venueSizes[s.venue];
+    (bySize[sz] = bySize[sz]||[]).push(parseFloat(eloToScore(s.elo)));
+  });
+  const entries = Object.entries(bySize).filter(([sz,arr]) => arr.length >= 2)
+    .map(([sz,arr]) => ({ sz, avg: arr.reduce((a,b)=>a+b,0)/arr.length, count: arr.length }));
+  if(entries.length < 2) return null;
+  entries.sort((a,b) => b.avg-a.avg);
+  const best = entries[0], worst = entries[entries.length-1];
+  const diffPct = worst.avg > 0 ? Math.round(((best.avg-worst.avg)/worst.avg)*100) : 0;
+  return { bestLabel: sizeLabels[best.sz], worstLabel: sizeLabels[worst.sz], diffPct };
+}
+
+function computeFestivalInsight(){
+  const withFlag = state.library.map(s => ({ show: s, fest: looksLikeFestival(s) }));
+  const fest = withFlag.filter(x => x.fest);
+  const standalone = withFlag.filter(x => !x.fest);
+  if(fest.length < 3 || standalone.length < 3) return null;
+  const rankMap = getCurrentRankMap();
+  const avgFestRank = Math.round(fest.reduce((s,x) => s+(rankMap[x.show.id]||0), 0) / fest.length);
+  const avgStandaloneRank = Math.round(standalone.reduce((s,x) => s+(rankMap[x.show.id]||0), 0) / standalone.length);
+  const topHalfCutoff = Math.ceil(state.library.length/2);
+  const festInTopHalf = fest.filter(x => (rankMap[x.show.id]||9999) <= topHalfCutoff).length;
+  return { festCount: fest.length, avgFestRank, avgStandaloneRank, festInTopHalf };
+}
+
+function insightCard(label, bodyHtml){
+  return `<div class="insight-card"><div class="label">${escapeHtml(label)}</div><div class="body">${bodyHtml}</div></div>`;
+}
+
+function buildInsights(){
+  if(state.library.length < 8){
+    return `<p class="empty-note">Log at least 8 shows and fight some duels to unlock Insights.</p>`;
+  }
+  let html = '';
+
+  // The Encore Line — headline stat
+  const line = computeEncoreLine();
+  html += `<div class="encore-line-hero">
+    <div class="big">${line.count} / ${line.total}</div>
+    <div class="sub">earned an Encore</div>
+  </div>`;
+
+  // Best by category
+  html += `<div class="insights-section"><h3>Best Of</h3>`;
+  const byArtist = computeGroupBest(s => [s.artistName], 1);
+  const byVenue = computeGroupBest(s => [s.venue], 2);
+  const byCity = computeGroupBest(s => [s.city], 2);
+  if(byArtist) html += insightCard('Best Artist Live', `<b>${escapeHtml(byArtist.key)}</b> — averaging ${byArtist.avg.toFixed(1)}/10 across ${byArtist.count} show${byArtist.count===1?'':'s'}.`);
+  if(byVenue) html += insightCard('Best Venue', `<b>${escapeHtml(byVenue.key)}</b> — averaging ${byVenue.avg.toFixed(1)}/10 across ${byVenue.count} shows.`);
+  if(byCity) html += insightCard('Best City', `<b>${escapeHtml(byCity.key)}</b> — averaging ${byCity.avg.toFixed(1)}/10 across ${byCity.count} shows.`);
+  const byYear = computeBestByYear();
+  if(byYear.length){
+    const yearList = byYear.slice(0,5).map(y => `<b>${y.year}</b>: ${escapeHtml(y.best.artistName)} (${eloToScore(y.best.elo)}/10)`).join('<br>');
+    html += insightCard('Best Show by Year', yearList);
+  }
+  html += `</div>`;
+
+  // Duel-specific
+  html += `<div class="insights-section"><h3>Rivalries &amp; Records</h3>`;
+  let any = false;
+  const giantKiller = computeGiantKiller();
+  if(giantKiller){ any = true; html += insightCard('Giant Killer', `<b>${escapeHtml(giantKiller.winnerTitle)}</b> (currently #${giantKiller.winnerRank}) once knocked off a Top 10 show, <b>${escapeHtml(giantKiller.loserTitle)}</b> (then #${giantKiller.loserRank}).`); }
+  const streak = computeStreaks();
+  if(streak){ any = true; html += insightCard('Longest Winning Streak', `<b>${escapeHtml(streak.title)}</b> survived ${streak.streak} straight matchups.`); }
+  const untouchable = computeUntouchable(4);
+  if(untouchable){ any = true; html += insightCard('Untouchable', `<b>${escapeHtml(untouchable.title)}</b> (#${untouchable.rank}) — ${Math.round(untouchable.winRate*100)}% win rate across ${untouchable.total} duels.`); }
+  const fall = computeBiggestFall();
+  if(fall){ any = true; html += insightCard('Biggest Fall', `<b>${escapeHtml(fall.title)}</b> looked elite early on but has dropped ${fall.fall} Elo points as it's faced stronger competition.`); }
+  const gate = computeGatekeeper();
+  if(gate){ any = true; html += insightCard('Gatekeeper', `<b>${escapeHtml(gate.show.artistName)}</b> (#${gate.rank}) sits at the biggest quality cliff in your list — beat it and you're in genuinely great-night territory.`); }
+  const climbFall = computeClimbersAndFallers();
+  if(climbFall.climber){ any = true; html += insightCard('Got Better With Age', `<b>${escapeHtml(climbFall.climber.title)}</b> started around #${climbFall.climber.initialRank} and has climbed to #${climbFall.climber.currentRank} as you've kept comparing it.`); }
+  if(climbFall.faller){ any = true; html += insightCard('The One You Overrated', `<b>${escapeHtml(climbFall.faller.title)}</b> started around #${climbFall.faller.initialRank} — now sits at #${climbFall.faller.currentRank}.`); }
+  if(!any) html += `<p class="insight-empty">Keep dueling and re-ranking to unlock rivalries — these need repeat matchups and history to show up.</p>`;
+  html += `</div>`;
+
+  // Taste insights
+  html += `<div class="insights-section"><h3>What Your Rankings Say About You</h3>`;
+  let anyTaste = false;
+  const venueInsight = computeVenueSizeInsight();
+  if(venueInsight){
+    anyTaste = true;
+    html += insightCard('Room Size Preference', `Your <b>${escapeHtml(venueInsight.bestLabel)}</b> shows rank ${venueInsight.diffPct}% higher than your <b>${escapeHtml(venueInsight.worstLabel)}</b> shows.`);
+  }
+  const festInsight = computeFestivalInsight();
+  if(festInsight){
+    anyTaste = true;
+    html += insightCard('Festival Skeptic?', `You've been to ${festInsight.festCount} festival sets (avg rank #${festInsight.avgFestRank}) vs. standalone shows (avg rank #${festInsight.avgStandaloneRank}). ${festInsight.festInTopHalf} festival set${festInsight.festInTopHalf===1?'':'s'} cracked your top half.`);
+  }
+  const repeatEffect = computeRepeatArtistEffect();
+  if(repeatEffect){
+    anyTaste = true;
+    const dir = repeatEffect.better ? 'better' : 'worse';
+    html += insightCard('Repeat Artist Effect', `Across ${repeatEffect.n} artists you've seen more than once, the second time tends to rank ${dir} — first shows average ${repeatEffect.avgFirst.toFixed(1)}, second shows average ${repeatEffect.avgSecond.toFixed(1)}.`);
+  }
+  const genreMatch = computeGenreMatchup();
+  if(genreMatch){
+    anyTaste = true;
+    html += insightCard('Genre Matchup', `<b>${escapeHtml(genreMatch.winner)}</b> beats <b>${escapeHtml(genreMatch.loser)}</b> ${genreMatch.pct}% of the time in your duels (${genreMatch.total} head-to-heads).`);
+  }
+  const golden = computeGoldenEra();
+  if(golden){
+    anyTaste = true;
+    html += insightCard('Your Golden Era', `<b>${golden.start}–${golden.end}</b> — ${golden.pct}% of your top ${golden.topN} shows happened in this stretch.`);
+  }
+  if(!anyTaste){
+    html += `<p class="insight-empty">Not enough signal yet — tag some venue sizes in Settings, or keep logging shows and duels.</p>`;
+  }
+  html += `</div>`;
+
+  return html;
+}
+
+function openInsights(){
+  el('insights-content').innerHTML = buildInsights();
+  const select = el('artist-card-select');
+  const artists = new Set();
+  state.library.forEach(s => { if(s.artistName) artists.add(s.artistName); });
+  select.innerHTML = `<option value="">Pick an artist…</option>` + [...artists].sort().map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+  el('artist-card-content').innerHTML = '';
+  el('insights-modal').classList.remove('hidden');
+}
+
+function renderArtistCard(artistName){
+  const shows = state.library.filter(s => s.artistName === artistName);
+  if(shows.length === 0) return '';
+  const rankMap = getCurrentRankMap();
+  let wins = 0, losses = 0;
+  const showIds = new Set(shows.map(s => s.id));
+  state.duelLog.forEach(d => {
+    if(showIds.has(d.aId)){ if(d.winnerId === d.aId) wins++; else losses++; }
+    if(showIds.has(d.bId) && d.bId !== d.aId){ if(d.winnerId === d.bId) wins++; else losses++; }
+  });
+  const scores = shows.map(s => parseFloat(eloToScore(s.elo)));
+  const avgScore = scores.reduce((a,b)=>a+b,0)/scores.length;
+  const ranks = shows.map(s => rankMap[s.id]).filter(r => r != null);
+  const avgRank = ranks.length ? Math.round(ranks.reduce((a,b)=>a+b,0)/ranks.length) : null;
+  const best = [...shows].sort((a,b)=>b.elo-a.elo)[0];
+  const worst = [...shows].sort((a,b)=>a.elo-b.elo)[0];
+  const variance = scores.reduce((s,v)=>s+(v-avgScore)**2,0)/scores.length;
+  const consistency = Math.max(0, Math.min(100, Math.round(100 - Math.sqrt(variance)*22)));
+  const ceiling = avgScore>=9?'Elite':avgScore>=8?'Great':avgScore>=6.5?'Good':avgScore>=5?'Average':'Rough';
+  const wouldSeeAgain = avgScore >= 6.5 ? 'Apparently, yes.' : 'Jury\'s still out.';
+
+  return `<div class="artist-card-box">
+    <div class="artist-card-title">${escapeHtml(artistName)}</div>
+    <div class="artist-card-row"><span class="k">Record</span><span class="v">${wins}–${losses}</span></div>
+    <div class="artist-card-row"><span class="k">Shows Seen</span><span class="v">${shows.length}</span></div>
+    <div class="artist-card-row"><span class="k">Average Rank</span><span class="v">${avgRank ? '#'+avgRank : '—'}</span></div>
+    <div class="artist-card-row"><span class="k">Best Appearance</span><span class="v">${escapeHtml(best.venue)}, ${best.year} — ${eloToScore(best.elo)}/10</span></div>
+    <div class="artist-card-row"><span class="k">Worst Appearance</span><span class="v">${escapeHtml(worst.venue)}, ${worst.year} — ${eloToScore(worst.elo)}/10</span></div>
+    <div class="artist-card-row"><span class="k">Consistency</span><span class="v">${consistency}/100</span></div>
+    <div class="artist-card-row"><span class="k">Ceiling</span><span class="v">${ceiling}</span></div>
+    <div class="artist-card-row"><span class="k">Would See Again</span><span class="v">${wouldSeeAgain}</span></div>
+  </div>`;
 }
 
 function buildStats(){
