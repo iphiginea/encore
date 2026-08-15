@@ -82,6 +82,9 @@
   .show-result .info{flex:1;min-width:0;padding:10px 12px;}
   .show-result .info .t{font-family:'Anton',sans-serif;letter-spacing:0.02em;text-transform:uppercase;font-weight:400;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .show-result .info .y{color:var(--text-dim);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Courier Prime',monospace;text-transform:uppercase;letter-spacing:0.02em;margin-top:2px;}
+  .row-date{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 8px;text-align:center;}
+  .row-date-md{font-family:'Courier Prime',monospace;font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;}
+  .row-date-yr{font-family:'Courier Prime',monospace;font-size:9px;color:var(--text-dim);white-space:nowrap;}
   .show-result .tag{font-size:10px;color:var(--teal);flex:none;text-transform:uppercase;letter-spacing:0.06em;padding-right:12px;font-family:'Courier Prime',monospace;}
   .load-more-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans';}
   .load-more-btn:hover{border-color:var(--accent);color:var(--accent);}
@@ -100,21 +103,21 @@
   .duel-card:first-child{--tilt:-1.5deg;}
   .duel-card:last-child{--tilt:1.5deg;}
 
-  .ticket{display:flex;border-radius:10px;overflow:visible;color:#fff8ec;box-shadow:0 8px 22px rgba(0,0,0,0.4);min-height:230px;}
-  .ticket-body{flex:1;padding:16px 10px;display:flex;flex-direction:column;justify-content:center;text-align:center;min-width:0;}
-  .ticket-label{font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.25em;opacity:0.75;margin-bottom:8px;}
-  .ticket-artist{font-family:'Anton',sans-serif;font-size:clamp(17px,5.2vw,23px);line-height:1.08;text-transform:uppercase;overflow-wrap:break-word;}
-  .ticket-venue{font-family:'Courier Prime',monospace;font-size:11px;margin-top:10px;text-transform:uppercase;letter-spacing:0.03em;overflow-wrap:break-word;}
-  .ticket-city{font-family:'Courier Prime',monospace;font-size:10px;opacity:0.85;margin-top:3px;text-transform:uppercase;}
-  .ticket-tour{font-family:'Courier Prime',monospace;font-size:9px;opacity:0.75;margin-top:6px;text-transform:uppercase;letter-spacing:0.06em;}
-  .ticket-perf{width:0;border-left:2px dashed rgba(255,255,255,0.55);position:relative;margin:14px 0;flex:none;}
-  .ticket-perf::before, .ticket-perf::after{content:'';position:absolute;width:14px;height:14px;background:var(--bg);border-radius:50%;left:-8px;}
-  .ticket-perf::before{top:-21px;}
-  .ticket-perf::after{bottom:-21px;}
-  .ticket-stub{width:58px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;text-align:center;}
-  .stub-month{font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:0.1em;}
-  .stub-day{font-family:'Anton',sans-serif;font-size:26px;line-height:1;margin:2px 0;}
-  .stub-year{font-family:'Courier Prime',monospace;font-size:9px;opacity:0.85;}
+  .ticket{display:flex;border-radius:10px;overflow:visible;color:#fff8ec;box-shadow:0 8px 22px rgba(0,0,0,0.4);min-height:170px;}
+  .ticket-body{flex:1;padding:11px 8px;display:flex;flex-direction:column;justify-content:center;text-align:center;min-width:0;}
+  .ticket-label{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:0.22em;opacity:0.75;margin-bottom:5px;}
+  .ticket-artist{font-family:'Anton',sans-serif;font-size:clamp(14px,4.4vw,18px);line-height:1.08;text-transform:uppercase;overflow-wrap:break-word;}
+  .ticket-venue{font-family:'Courier Prime',monospace;font-size:9.5px;margin-top:7px;text-transform:uppercase;letter-spacing:0.03em;overflow-wrap:break-word;}
+  .ticket-city{font-family:'Courier Prime',monospace;font-size:9px;opacity:0.85;margin-top:2px;text-transform:uppercase;}
+  .ticket-tour{font-family:'Courier Prime',monospace;font-size:8px;opacity:0.75;margin-top:5px;text-transform:uppercase;letter-spacing:0.06em;}
+  .ticket-perf{width:0;border-left:2px dashed rgba(255,255,255,0.55);position:relative;margin:10px 0;flex:none;}
+  .ticket-perf::before, .ticket-perf::after{content:'';position:absolute;width:11px;height:11px;background:var(--bg);border-radius:50%;left:-6.5px;}
+  .ticket-perf::before{top:-16px;}
+  .ticket-perf::after{bottom:-16px;}
+  .ticket-stub{width:46px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 3px;text-align:center;}
+  .stub-month{font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.08em;}
+  .stub-day{font-family:'Anton',sans-serif;font-size:20px;line-height:1;margin:2px 0;}
+  .stub-year{font-family:'Courier Prime',monospace;font-size:8px;opacity:0.85;}
 
   .confirmation{background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:24px;text-align:center;}
   .confirmation .rank-number{font-family:'Anton',sans-serif;font-size:64px;color:var(--accent);line-height:1;}
@@ -252,7 +255,7 @@
         </div>
         <div class="filter-row">
           <input id="year-input" type="number" inputmode="numeric" placeholder="Year (optional)">
-          <input id="city-input" type="text" placeholder="City (optional)">
+          <input id="city-input" type="text" placeholder="City (optional)" list="city-suggestions">
         </div>
         <div id="search-status"></div>
         <div id="search-results"></div>
@@ -306,6 +309,7 @@
       <div id="rankings-list"></div>
     </section>
   </main>
+  <datalist id="city-suggestions"></datalist>
 </div>
 
 <div id="settings-modal" class="hidden">
@@ -335,6 +339,15 @@
       </div>
       <div class="status-note" id="backup-status"></div>
     </div>
+
+    <div class="settings-section">
+      <h3>Setlist Songs</h3>
+      <p>Powers "Most Seen Songs Live" in Stats. New shows pick this up automatically — this fills it in for shows you logged before this existed. (Manually-added shows have no setlist to fetch.)</p>
+      <div class="file-row">
+        <button class="file-btn" id="backfill-songs-btn">🎵 Fill In Setlist Songs</button>
+      </div>
+      <div class="status-note" id="backfill-status"></div>
+    </div>
   </div>
 </div>
 
@@ -354,7 +367,7 @@
     <p>Can't find it on setlist.fm? Add the details yourself.</p>
     <input id="manual-artist-input" type="text" placeholder="Artist name">
     <input id="manual-venue-input" type="text" placeholder="Venue">
-    <input id="manual-city-input" type="text" placeholder="City">
+    <input id="manual-city-input" type="text" placeholder="City" list="city-suggestions">
     <input id="manual-date-input" type="date">
     <input id="manual-tour-input" type="text" placeholder="Tour (optional)">
     <div class="row">
@@ -424,6 +437,7 @@ async function init(){
   if(sinceBackupRaw){ const n = parseInt(sinceBackupRaw, 10); state.duelsSinceBackup = isNaN(n) ? 0 : n; }
   bindEvents();
   renderView();
+  populateCityDatalist();
   maybeShowInstallNudge();
 }
 
@@ -495,6 +509,7 @@ function bindEvents(){
   el('manual-add-btn').onclick = openManualModal;
   el('manual-cancel').onclick = closeManualModal;
   el('manual-save').onclick = submitManualShow;
+  el('backfill-songs-btn').onclick = backfillSongs;
   initDuelSwipe();
 }
 
@@ -551,6 +566,13 @@ function monthAbbrev(mm){
   const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
   const mi = parseInt(mm,10)-1;
   return months[mi] || '???';
+}
+function shortDateBadge(d){
+  if(!d) return { md: '', yr: '' };
+  const parts = d.split('-');
+  if(parts.length !== 3) return { md: d, yr: '' };
+  const [dd,mm,yyyy] = parts;
+  return { md: `${monthAbbrev(mm)} ${parseInt(dd,10)}`, yr: yyyy };
 }
 function dateSortValue(d){
   if(!d) return 0;
@@ -609,6 +631,16 @@ async function loadSearchPage(){
   }
 }
 
+function extractSongs(raw){
+  const songs = [];
+  (raw.sets && raw.sets.set || []).forEach(set => {
+    (set.song || []).forEach(song => {
+      if(song.name) songs.push(song.name);
+    });
+  });
+  return songs;
+}
+
 function parseSetlistResult(raw){
   return {
     id: raw.id,
@@ -618,7 +650,8 @@ function parseSetlistResult(raw){
     year: (raw.eventDate||'').split('-')[2] || '',
     venue: raw.venue ? raw.venue.name : 'Unknown Venue',
     city: raw.venue && raw.venue.city ? raw.venue.city.name : '',
-    tour: raw.tour ? raw.tour.name : ''
+    tour: raw.tour ? raw.tour.name : '',
+    songs: extractSongs(raw)
   };
 }
 
@@ -632,13 +665,19 @@ function renderSearchResults(){
   state.searchAccum.forEach(raw => {
     const show = parseSetlistResult(raw);
     const already = state.library.find(m => m.id===show.id);
+    const badge = shortDateBadge(show.date);
     const card = document.createElement('div');
     card.className = 'show-result';
     card.innerHTML = `
       <div class="accent" style="background:${ticketColor(show.artistName)}"></div>
       <div class="info">
         <div class="t">${escapeHtml(show.artistName)}</div>
-        <div class="y">${escapeHtml(show.venue)}, ${escapeHtml(show.city)} · ${formatDateDisplay(show.date)}</div>
+        <div class="y">${escapeHtml(show.city)}</div>
+        <div class="y">${escapeHtml(show.venue)}</div>
+      </div>
+      <div class="row-date">
+        <div class="row-date-md">${escapeHtml(badge.md)}</div>
+        <div class="row-date-yr">${escapeHtml(badge.yr)}</div>
       </div>
       ${already ? '<span class="tag">Logged</span>' : ''}
     `;
@@ -905,6 +944,7 @@ async function finalizeShow(){
 
   if(!state.isRerank){
     state.library.push(state.pendingShow);
+    populateCityDatalist();
   }else{
     state.pendingShow.rerankCount = (state.pendingShow.rerankCount || 0) + 1;
   }
@@ -1067,6 +1107,12 @@ function updateViewToggle(){
   el('view-tier-btn').classList.toggle('active', state.rankingsViewMode === 'tiers');
 }
 
+function populateCityDatalist(){
+  const cities = new Set();
+  state.library.forEach(s => { if(s.city) cities.add(s.city); });
+  el('city-suggestions').innerHTML = [...cities].sort().map(c => `<option value="${escapeHtml(c)}"></option>`).join('');
+}
+
 function populateFilterOptions(){
   const artistSel = el('filter-artist');
   const yearSel = el('filter-year');
@@ -1138,12 +1184,18 @@ function renderRankingsList(){
   visible.forEach(({show, rank}) => {
     const row = document.createElement('div');
     row.className = 'rank-row';
+    const badge = shortDateBadge(show.date);
     row.innerHTML = `
       <div class="accent" style="background:${ticketColor(show.artistName)}"></div>
       <div class="rank mono">${rank}</div>
       <div class="info">
         <div class="t">${escapeHtml(show.artistName)}</div>
-        <div class="y">${escapeHtml(show.venue)} · ${formatDateDisplay(show.date)}</div>
+        <div class="y">${escapeHtml(show.city)}</div>
+        <div class="y">${escapeHtml(show.venue)}</div>
+      </div>
+      <div class="row-date">
+        <div class="row-date-md">${escapeHtml(badge.md)}</div>
+        <div class="row-date-yr">${escapeHtml(badge.yr)}</div>
       </div>
       <div class="score mono">${eloToScore(show.elo)}</div>
       <button class="rerank-btn" title="Re-rank">↻</button>
@@ -1269,6 +1321,36 @@ function handleImportBackupFile(e){
   reader.readAsText(file);
 }
 
+async function fetchSetlistSongs(setlistId){
+  if(!state.proxyUrl || !state.apiKey) return null;
+  try{
+    const res = await fetch(`${state.proxyUrl}/rest/1.0/setlist/${setlistId}`, { headers: { 'x-api-key': state.apiKey, 'Accept': 'application/json' } });
+    if(!res.ok) return null;
+    const data = await res.json();
+    return extractSongs(data);
+  }catch(e){ return null; }
+}
+
+async function backfillSongs(){
+  if(!state.apiKey || !state.proxyUrl){
+    el('backfill-status').textContent = 'Add your API key and proxy URL above first.';
+    return;
+  }
+  const targets = state.library.filter(m => m.songs === undefined && !String(m.id).startsWith('manual-'));
+  if(targets.length === 0){
+    el('backfill-status').textContent = 'All your shows already have song data (or were added manually, which has none to fetch).';
+    return;
+  }
+  for(let i = 0; i < targets.length; i++){
+    el('backfill-status').textContent = `Fetching setlist ${i+1} of ${targets.length}: ${targets[i].artistName}…`;
+    const songs = await fetchSetlistSongs(targets[i].id);
+    targets[i].songs = songs || [];
+    await new Promise(r => setTimeout(r, 200));
+  }
+  await storageSet('encore:library', JSON.stringify(state.library));
+  el('backfill-status').textContent = `Done — filled in setlists for ${targets.length} show${targets.length===1?'':'s'}.`;
+}
+
 function buildStats(){
   const lib = state.library;
   if(lib.length === 0){
@@ -1285,6 +1367,12 @@ function buildStats(){
   lib.forEach(m => (m.genres||[]).forEach(g => { genreCounts[g] = (genreCounts[g]||0)+1; }));
   const genreEntries = Object.entries(genreCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
   const maxGenreCount = genreEntries.length ? genreEntries[0][1] : 1;
+
+  const songCounts = {};
+  lib.forEach(m => (m.songs||[]).forEach(s => { songCounts[s] = (songCounts[s]||0)+1; }));
+  const songEntries = Object.entries(songCounts).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const maxSongCount = songEntries.length ? songEntries[0][1] : 1;
+  const showsMissingSongs = lib.filter(m => m.songs === undefined && !String(m.id).startsWith('manual-')).length;
 
   const yearCounts = {};
   lib.forEach(m => { if(m.year) yearCounts[m.year] = (yearCounts[m.year]||0)+1; });
@@ -1324,6 +1412,15 @@ function buildStats(){
     html += `<h3 class="stats-heading">Times Seen a Band</h3><div class="stats-bars">`;
     artistEntries.forEach(([name,count]) => { html += bar(name, count, maxArtistCount); });
     html += `</div>`;
+  }
+
+  if(songEntries.length){
+    html += `<h3 class="stats-heading">Most Seen Songs Live</h3><div class="stats-bars">`;
+    songEntries.forEach(([name,count]) => { html += bar(name, count, maxSongCount); });
+    html += `</div>`;
+  }
+  if(showsMissingSongs > 0){
+    html += `<p class="empty-note" style="padding:6px 0;">${showsMissingSongs} show${showsMissingSongs===1?'':'s'} logged before setlists were tracked — run "Fill In Setlist Songs" in Settings to include them here.</p>`;
   }
 
   if(genreEntries.length){
