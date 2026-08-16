@@ -265,7 +265,7 @@
         </div>
         <div class="filter-row">
           <input id="year-input" type="number" inputmode="numeric" placeholder="Year (optional)">
-          <select id="city-input"><option value="">Any city</option></select>
+          <input id="city-input" type="text" placeholder="City (optional)" list="city-suggestions" autocomplete="off">
           <input id="venue-input" type="text" placeholder="Venue (optional)">
         </div>
         <div id="search-status"></div>
@@ -1199,14 +1199,10 @@ function renderRankings(){
 }
 
 function populateCityDatalist(){
-  const cities = new Set();
-  state.library.forEach(s => { if(s.city) cities.add(s.city); });
-  const sorted = [...cities].sort();
+  const counts = {};
+  state.library.forEach(s => { if(s.city) counts[s.city] = (counts[s.city]||0) + 1; });
+  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]).map(([city]) => city);
   el('city-suggestions').innerHTML = sorted.map(c => `<option value="${escapeHtml(c)}"></option>`).join('');
-  const citySelect = el('city-input');
-  const currentVal = citySelect.value;
-  citySelect.innerHTML = `<option value="">Any city</option>` + sorted.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
-  citySelect.value = sorted.includes(currentVal) ? currentVal : '';
 }
 
 function populateFilterOptions(){
