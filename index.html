@@ -321,18 +321,9 @@
 
 <div id="settings-modal" class="hidden">
   <div class="box">
-    <h2 class="display">setlist.fm API Key</h2>
-    <p>Encore pulls show data from setlist.fm. Sign up for a free account, then apply for a free API key from your account settings at
-      <a href="https://api.setlist.fm/" target="_blank">api.setlist.fm</a>
-      and paste it below.</p>
-    <input id="api-key-input" type="text" placeholder="Paste your setlist.fm API key">
-
-    <p><strong>Also required:</strong> setlist.fm's API blocks direct requests from a browser, so search needs a small free proxy in front of it. Paste your proxy's URL here once it's set up.</p>
-    <input id="proxy-url-input" type="text" placeholder="e.g. https://your-worker.workers.dev">
-
+    <h2 class="display">Settings</h2>
     <div class="row">
-      <button class="cancel" id="settings-cancel">Cancel</button>
-      <button class="save" id="settings-save">Save</button>
+      <button class="cancel" id="settings-cancel">Close</button>
     </div>
 
     <div class="settings-section">
@@ -409,10 +400,9 @@
 
 <script>
 const TICKET_COLORS = ['#e8734a','#7ba05b','#5b8fa3','#d4a017','#9b7fb8','#d67a94','#4a9b8e','#c25b3f'];
+const SETLIST_PROXY_URL = 'https://encore-setlist-proxy.kiah-harpool.workers.dev';
 
 const state = {
-  apiKey: null,
-  proxyUrl: null,
   library: [],
   view: 'log',
   pendingShow: null,
@@ -453,10 +443,7 @@ async function storageSet(key, value){
 }
 
 async function init(){
-  const key = await storageGet('encore:api-key');
-  if(key) state.apiKey = key;
-  const proxyUrl = await storageGet('encore:proxyurl');
-  if(proxyUrl) state.proxyUrl = proxyUrl;
+  try{ localStorage.removeItem('encore:api-key'); localStorage.removeItem('encore:proxyurl'); }catch(e){}
   const lib = await storageGet('encore:library');
   if(lib){ try{ state.library = JSON.parse(lib); }catch(e){ state.library = []; } }
   const duels = await storageGet('encore:totalduels');
@@ -519,7 +506,6 @@ function bindEvents(){
     await storageSet('encore:installnudgedismissed', '1');
   };
   el('settings-cancel').onclick = closeSettings;
-  el('settings-save').onclick = saveApiKey;
   el('search-btn').onclick = runSearch;
   el('artist-input').addEventListener('keydown', e => { if(e.key==='Enter') runSearch(); });
   el('confirm-done').onclick = resetToSearch;
@@ -562,8 +548,6 @@ function renderView(){
 }
 
 function openSettings(){
-  el('api-key-input').value = state.apiKey || '';
-  el('proxy-url-input').value = state.proxyUrl || '';
   renderVenueSizeList();
   el('settings-modal').classList.remove('hidden');
 }
@@ -594,16 +578,6 @@ function renderVenueSizeList(){
     };
   });
 }
-async function saveApiKey(){
-  const val = el('api-key-input').value.trim();
-  state.apiKey = val || null;
-  await storageSet('encore:api-key', val);
-  const proxyVal = el('proxy-url-input').value.trim().replace(/\/$/, '');
-  state.proxyUrl = proxyVal || null;
-  await storageSet('encore:proxyurl', proxyVal);
-  closeSettings();
-}
-
 function escapeHtml(s){
   const d = document.createElement('div');
   d.textContent = s;
@@ -656,14 +630,6 @@ async function runSearch(){
   const venue = el('venue-input').value.trim();
   el('search-results').innerHTML = '';
   if(!artistName){ el('search-status').innerHTML=''; return; }
-  if(!state.apiKey){
-    el('search-status').innerHTML = `<div class="inline-msg warn">Add your setlist.fm API key first — tap the ⚙ up top.</div>`;
-    return;
-  }
-  if(!state.proxyUrl){
-    el('search-status').innerHTML = `<div class="inline-msg warn">setlist.fm blocks direct requests from a browser — you need to set up the free proxy first. See Settings for steps.</div>`;
-    return;
-  }
   state.searchArtist = artistName;
   state.searchYear = year;
   state.searchCity = city;
@@ -677,18 +643,18 @@ async function runSearch(){
 async function loadSearchPage(){
   el('search-status').innerHTML = `<span class="spinner"></span>`;
   try{
-    let url = `${state.proxyUrl}/rest/1.0/search/setlists?artistName=${encodeURIComponent(state.searchArtist)}&p=${state.searchPage}`;
+    let url = `${SETLIST_PROXY_URL}/rest/1.0/search/setlists?artistName=${encodeURIComponent(state.searchArtist)}&p=${state.searchPage}`;
     if(state.searchYear) url += `&year=${encodeURIComponent(state.searchYear)}`;
     if(state.searchCity) url += `&cityName=${encodeURIComponent(state.searchCity)}`;
     if(state.searchVenue) url += `&venueName=${encodeURIComponent(state.searchVenue)}`;
-    const res = await fetch(url, { headers: { 'x-api-key': state.apiKey, 'Accept': 'application/json' } });
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
     if(!res.ok){
       if(res.status === 404){
         el('search-status').innerHTML = '';
         renderSearchResults();
         return;
       }
-      el('search-status').innerHTML = `<div class="inline-msg warn">setlist.fm rejected that request. Check your API key in settings.</div>`;
+      el('search-status').innerHTML = `<div class="inline-msg warn">Encore could not load shows from setlist.fm.</div>`;
       return;
     }
     const data = await res.json();
@@ -697,7 +663,7 @@ async function loadSearchPage(){
     el('search-status').innerHTML = '';
     renderSearchResults();
   }catch(e){
-    el('search-status').innerHTML = `<div class="inline-msg warn">Couldn't reach the proxy. Double-check the proxy URL in Settings.</div>`;
+    el('search-status').innerHTML = `<div class="inline-msg warn">Couldn't reach the show data service. Try again in a moment.</div>`;
   }
 }
 
@@ -1384,9 +1350,8 @@ function handleImportBackupFile(e){
 }
 
 async function fetchSetlistSongs(setlistId){
-  if(!state.proxyUrl || !state.apiKey) return null;
   try{
-    const res = await fetch(`${state.proxyUrl}/rest/1.0/setlist/${setlistId}`, { headers: { 'x-api-key': state.apiKey, 'Accept': 'application/json' } });
+    const res = await fetch(`${SETLIST_PROXY_URL}/rest/1.0/setlist/${setlistId}`, { headers: { 'Accept': 'application/json' } });
     if(!res.ok) return null;
     const data = await res.json();
     return extractSongs(data);
@@ -1394,10 +1359,6 @@ async function fetchSetlistSongs(setlistId){
 }
 
 async function backfillSongs(){
-  if(!state.apiKey || !state.proxyUrl){
-    el('backfill-status').textContent = 'Add your API key and proxy URL above first.';
-    return;
-  }
   const targets = state.library.filter(m => m.songs === undefined && !String(m.id).startsWith('manual-'));
   if(targets.length === 0){
     el('backfill-status').textContent = 'All your shows already have song data (or were added manually, which has none to fetch).';
